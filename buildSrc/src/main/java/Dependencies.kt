@@ -17,9 +17,11 @@ object Dependencies {
     object UI {
         private const val materialVersion = "1.6.1"
         private const val constraintLayoutVersion = "2.1.4"
+        private const val carouselViewVersion = "1.2.5"
 
         const val material = "com.google.android.material:material:$materialVersion"
         const val constraintLayout = "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
+        const val carouselView = "com.github.sparrow007:carouselrecyclerview:$carouselViewVersion"
     }
 
     object Tests {

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_host"
+    app:startDestination="@id/browseFragment">
+
+    <fragment
+        android:id="@+id/browseFragment"
+        android:name="shvyn22.flexingfreegames.presentation.browse.BrowseFragment"
+        android:label="@string/nav_browse"
+        tools:layout="@layout/fragment_browse">
+        <action
+            android:id="@+id/action_browseToDetails"
+            app:destination="@id/detailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/bookmarksFragment"
+        android:name="shvyn22.flexingfreegames.presentation.bookmarks.BookmarksFragment"
+        android:label="@string/nav_bookmarks"
+        tools:layout="@layout/fragment_bookmarks" >
+        <action
+            android:id="@+id/action_bookmarksFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="shvyn22.flexingfreegames.presentation.details.DetailsFragment"
+        android:label="@string/nav_details"
+        tools:layout="@layout/fragment_details">
+        <argument
+            android:name="id"
+            app:argType="integer" />
+    </fragment>
+</navigation>
