@@ -76,7 +76,7 @@
             app:layout_constraintEnd_toEndOf="@id/content_end"
             app:layout_constraintStart_toEndOf="@id/iv_thumbnail"
             app:layout_constraintTop_toTopOf="@id/iv_thumbnail"
-            tools:text="bruhhhhhhhhhhhhhhhhhhhh" />
+            tools:text="Title" />
 
         <TextView
             android:id="@+id/tv_genre"
@@ -88,7 +88,7 @@
             app:layout_constraintEnd_toEndOf="@id/tv_title"
             app:layout_constraintStart_toStartOf="@id/tv_title"
             app:layout_constraintTop_toBottomOf="@id/tv_title"
-            tools:text="Shooter" />
+            tools:text="Genre" />
 
         <TextView
             android:id="@+id/tv_publisher"
@@ -99,7 +99,7 @@
             app:layout_constraintEnd_toStartOf="@id/tv_release_date"
             app:layout_constraintStart_toStartOf="@id/iv_thumbnail"
             app:layout_constraintTop_toBottomOf="@id/barrier_header"
-            tools:text="Bruh Inc." />
+            tools:text="Publisher" />
 
         <TextView
             android:id="@+id/tv_release_date"
@@ -122,7 +122,7 @@
             app:layout_constraintEnd_toStartOf="@id/tv_release_date"
             app:layout_constraintStart_toStartOf="@id/iv_thumbnail"
             app:layout_constraintTop_toBottomOf="@id/tv_publisher"
-            tools:text="BruhDev" />
+            tools:text="Developer" />
 
         <TextView
             android:id="@+id/tv_platform"
@@ -134,7 +134,7 @@
             app:layout_constraintEnd_toEndOf="@id/content_end"
             app:layout_constraintStart_toEndOf="@id/tv_publisher"
             app:layout_constraintTop_toBottomOf="@id/tv_release_date"
-            tools:text="PC (Windows)" />
+            tools:text="Platform" />
 
         <TextView
             android:id="@+id/tv_description"
@@ -144,7 +144,7 @@
             app:layout_constraintEnd_toEndOf="@id/content_end"
             app:layout_constraintStart_toStartOf="@id/content_start"
             app:layout_constraintTop_toBottomOf="@id/barrier_details"
-            tools:text="bruhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh" />
+            tools:text="Description" />
 
         <include
             android:id="@+id/panel_requirements"

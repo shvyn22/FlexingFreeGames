@@ -25,4 +25,66 @@
     <string name="nav_browse">Browse</string>
     <string name="nav_bookmarks">Bookmarks</string>
     <string name="nav_details">Details</string>
+    
+    <string-array name="platforms">
+        <item>PC</item>
+        <item>Browser</item>
+        <item>All</item>
+    </string-array>
+
+    <string-array name="sort_by">
+        <item>Release-date</item>
+        <item>Popularity</item>
+        <item>Alphabetical</item>
+        <item>Relevance</item>
+    </string-array>
+    
+    <string-array name="category">
+        <item>All</item>
+        <item>MMORPG</item>
+        <item>Shooter</item>
+        <item>Strategy</item>
+        <item>Moba</item>
+        <item>Racing</item>
+        <item>Sports</item>
+        <item>Social</item>
+        <item>Sandbox</item>
+        <item>Open-world</item>
+        <item>Survival</item>
+        <item>PVP</item>
+        <item>PVE</item>
+        <item>Pixel</item>
+        <item>Voxel</item>
+        <item>Zombie</item>
+        <item>Turn-based</item>
+        <item>First-person</item>
+        <item>Third-person</item>
+        <item>Top-down</item>
+        <item>Tank</item>
+        <item>Space</item>
+        <item>Sailing</item>
+        <item>Side-scroller</item>
+        <item>Superhero</item>
+        <item>Permadeath</item>
+        <item>Card</item>
+        <item>Battle-royale</item>
+        <item>MMO</item>
+        <item>MMOFPS</item>
+        <item>MMOTPS</item>
+        <item>3D</item>
+        <item>2D</item>
+        <item>Anime</item>
+        <item>Fantasy</item>
+        <item>Sci-Fi</item>
+        <item>Fighting</item>
+        <item>Action-RPG</item>
+        <item>Action</item>
+        <item>Military</item>
+        <item>Martial-arts</item>
+        <item>Flight</item>
+        <item>Low-spec</item>
+        <item>Tower-defense</item>
+        <item>Horror</item>
+        <item>MMORTS</item>
+    </string-array>
 </resources>

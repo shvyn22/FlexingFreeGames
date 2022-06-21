@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/browseFragment"
+        android:icon="@drawable/ic_browse"
+        android:title="@string/nav_browse" />
+
+    <item
+        android:id="@+id/bookmarksFragment"
+        android:icon="@drawable/ic_not_bookmarked"
+        android:title="@string/nav_bookmarks" />
+</menu>

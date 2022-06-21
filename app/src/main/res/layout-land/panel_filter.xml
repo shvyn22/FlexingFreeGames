@@ -26,7 +26,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="@string/hint_platform"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/til_category"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -41,11 +41,10 @@
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
             android:hint="@string/hint_category"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/til_platform">
+            app:layout_constraintEnd_toStartOf="@id/til_sort_by"
+            app:layout_constraintStart_toEndOf="@id/til_platform"
+            app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.MaterialAutoCompleteTextView
                 android:id="@+id/actv_category"
@@ -58,11 +57,10 @@
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
             android:hint="@string/hint_sort_by"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/til_category">
+            app:layout_constraintStart_toEndOf="@id/til_category"
+            app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.MaterialAutoCompleteTextView
                 android:id="@+id/actv_sort_by"
@@ -78,7 +76,7 @@
             android:text="@string/text_action_search"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/til_sort_by" />
+            app:layout_constraintTop_toBottomOf="@id/til_platform" />
 
         <TextView
             android:id="@+id/tv_show_filter"
