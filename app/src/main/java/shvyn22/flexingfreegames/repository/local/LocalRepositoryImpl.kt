@@ -22,6 +22,10 @@ class LocalRepositoryImpl(
             emit(Resource.Success(it))
     }
 
+    override suspend fun isGameBookmarked(id: Int): Boolean {
+        return dao.isGameBookmarked(id)
+    }
+
     override suspend fun insertBookmark(item: DetailedGameModel) {
         dao.insertBookmark(fromDetailedGameToGame(item))
     }

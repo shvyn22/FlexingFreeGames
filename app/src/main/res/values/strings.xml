@@ -13,6 +13,9 @@
     <string name="text_action_retry">Retry</string>
     <string name="text_action_search">Search</string>
 
+    <string name="text_error_fetching">Error fetching data</string>
+    <string name="text_error_no_bookmarks">No bookmarks were found</string>
+
     <string name="text_accessibility_thumb">Game thumbnail</string>
     <string name="text_accessibility_freetogame">Go to FreeToGame.com</string>
     <string name="text_accessibility_game_url">Go to the game\'s store page</string>
@@ -27,19 +30,19 @@
     <string name="nav_details">Details</string>
     
     <string-array name="platforms">
+        <item>All</item>
         <item>PC</item>
         <item>Browser</item>
-        <item>All</item>
     </string-array>
 
-    <string-array name="sort_by">
+    <string-array name="sort_types">
         <item>Release-date</item>
         <item>Popularity</item>
         <item>Alphabetical</item>
         <item>Relevance</item>
     </string-array>
     
-    <string-array name="category">
+    <string-array name="categories">
         <item>All</item>
         <item>MMORPG</item>
         <item>Shooter</item>

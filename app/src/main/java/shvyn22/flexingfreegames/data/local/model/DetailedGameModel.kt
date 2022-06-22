@@ -13,7 +13,7 @@ data class DetailedGameModel(
     val gameUrl: String,
     val freeToGameUrl: String,
     val thumbnail: String,
-    val systemRequirements: SystemRequirementsModel,
+    val systemRequirements: SystemRequirementsModel?,
     val screenshots: List<ScreenshotModel>
 )
 

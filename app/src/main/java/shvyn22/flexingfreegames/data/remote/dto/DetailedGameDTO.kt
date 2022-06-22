@@ -1,78 +1,74 @@
 package shvyn22.flexingfreegames.data.remote.dto
 
 import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
 
-@JsonClass(generateAdapter = true)
 data class DetailedGameDTO(
-    @Json(name = "id")
+    @field:Json(name = "id")
     val id: Int,
 
-    @Json(name = "title")
+    @field:Json(name = "title")
     val title: String,
 
-    @Json(name = "release_date")
+    @field:Json(name = "release_date")
     val releaseDate: String,
 
-    @Json(name = "publisher")
+    @field:Json(name = "publisher")
     val publisher: String,
 
-    @Json(name = "developer")
+    @field:Json(name = "developer")
     val developer: String,
 
-    @Json(name = "genre")
+    @field:Json(name = "genre")
     val genre: String,
 
-    @Json(name = "platform")
+    @field:Json(name = "platform")
     val platform: String,
 
-    @Json(name = "short_description")
+    @field:Json(name = "short_description")
     val description: String,
 
-    @Json(name = "description")
+    @field:Json(name = "description")
     val detailedDescription: String,
 
-    @Json(name = "game_url")
+    @field:Json(name = "game_url")
     val gameUrl: String,
 
-    @Json(name = "freetogame_profile_url")
+    @field:Json(name = "freetogame_profile_url")
     val freeToGameUrl: String,
 
-    @Json(name = "thumbnail")
+    @field:Json(name = "thumbnail")
     val thumbnail: String,
 
-    @Json(name = "minimum_system_requirements")
-    val systemRequirements: SystemRequirementsDTO,
+    @field:Json(name = "minimum_system_requirements")
+    val systemRequirements: SystemRequirementsDTO?,
 
-    @Json(name = "screenshots")
-    val screenshots: List<ScreenshotDTO>
+    @field:Json(name = "screenshots")
+    val screenshots: List<ScreenshotDTO>?
 )
 
-@JsonClass(generateAdapter = true)
 data class SystemRequirementsDTO(
 
-    @Json(name = "os")
+    @field:Json(name = "os")
     val os: String,
 
-    @Json(name = "processor")
+    @field:Json(name = "processor")
     val processor: String,
 
-    @Json(name = "memory")
+    @field:Json(name = "memory")
     val memory: String,
 
-    @Json(name = "graphics")
+    @field:Json(name = "graphics")
     val graphics: String,
 
-    @Json(name = "storage")
+    @field:Json(name = "storage")
     val storage: String,
 )
 
-@JsonClass(generateAdapter = true)
 data class ScreenshotDTO(
 
-    @Json(name = "id")
+    @field:Json(name = "id")
     val id: Int,
 
-    @Json(name = "image")
+    @field:Json(name = "image")
     val image: String,
 )

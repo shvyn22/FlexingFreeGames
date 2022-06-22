@@ -50,7 +50,7 @@ object Dependencies {
     }
 
     object Lifecycle {
-        private const val lifecycleVersion = "2.4.0"
+        private const val lifecycleVersion = "2.4.1"
 
         const val lifecycleRuntime = "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
         const val lifecycleViewModel = "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
@@ -73,7 +73,7 @@ object Dependencies {
     }
 
     object Coroutines {
-        private const val coroutinesVersion = "1.6.2"
+        private const val coroutinesVersion = "1.6.3"
 
         const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
         const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
@@ -82,12 +82,11 @@ object Dependencies {
 
     object Hilt {
         private const val hiltVersion = "2.42"
-        private const val hiltAndroidXVersion = "1.0.0"
+        private const val hiltAndroidXVersion = "1.0.0-alpha03"
 
         const val hiltAndroid = "com.google.dagger:hilt-android:$hiltVersion"
         const val hiltCompiler = "com.google.dagger:hilt-android-compiler:$hiltVersion"
         const val hiltAndroidCompiler = "androidx.hilt:hilt-compiler:$hiltAndroidXVersion"
-        const val hiltViewModel = "androidx.hilt:hilt-lifecycle-viewmodel:$hiltAndroidXVersion"
         const val hiltTesting = "com.google.dagger:hilt-android-testing:$hiltVersion"
     }
 

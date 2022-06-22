@@ -40,17 +40,19 @@ fun fromDetailedGameDTOToModel(item: DetailedGameDTO) =
         screenshots = fromScreenshotDTOToModel(item.screenshots)
     )
 
-fun fromSystemRequirementsDTOToModel(item: SystemRequirementsDTO) =
-    SystemRequirementsModel(
-        os = item.os,
-        processor = item.processor,
-        memory = item.memory,
-        graphics = item.graphics,
-        storage = item.storage
-    )
+fun fromSystemRequirementsDTOToModel(item: SystemRequirementsDTO?): SystemRequirementsModel? =
+    item?.let {
+        SystemRequirementsModel(
+            os = item.os,
+            processor = item.processor,
+            memory = item.memory,
+            graphics = item.graphics,
+            storage = item.storage
+        )
+    }
 
-fun fromScreenshotDTOToModel(items: List<ScreenshotDTO>) =
-    items.map { fromScreenshotDTOToModel(it) }
+fun fromScreenshotDTOToModel(items: List<ScreenshotDTO>?): List<ScreenshotModel> =
+    items?.map { fromScreenshotDTOToModel(it) } ?: emptyList()
 
 fun fromScreenshotDTOToModel(item: ScreenshotDTO) =
     ScreenshotModel(

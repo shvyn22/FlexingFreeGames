@@ -3,22 +3,18 @@ package shvyn22.flexingfreegames.data.preferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import shvyn22.flexingfreegames.util.FILTER_CATEGORY_DEFAULT
-import shvyn22.flexingfreegames.util.FILTER_PLATFORM_DEFAULT
-import shvyn22.flexingfreegames.util.FILTER_SORT_DEFAULT
 
 class PreferencesManagerImpl(
     private val dataStore: DataStore<Preferences>
 ) : PreferencesManager {
 
     override val filterPreferences: Flow<FilterPreferences> = dataStore.data.map { prefs ->
-        val platform = prefs[PreferencesKeys.FILTER_PLATFORM] ?: FILTER_PLATFORM_DEFAULT
-        val sort = prefs[PreferencesKeys.FILTER_SORT] ?: FILTER_SORT_DEFAULT
-        val category = prefs[PreferencesKeys.FILTER_CATEGORY]
-            .takeIf { it != FILTER_CATEGORY_DEFAULT }
+        val platform = prefs[PreferencesKeys.FILTER_PLATFORM] ?: 0
+        val sort = prefs[PreferencesKeys.FILTER_SORT] ?: 0
+        val category = prefs[PreferencesKeys.FILTER_CATEGORY] ?: 0
 
         FilterPreferences(
             platform = platform,
@@ -31,14 +27,13 @@ class PreferencesManagerImpl(
         dataStore.edit { prefs ->
             prefs[PreferencesKeys.FILTER_PLATFORM] = newFilterValue.platform
             prefs[PreferencesKeys.FILTER_SORT] = newFilterValue.sort
-            prefs[PreferencesKeys.FILTER_CATEGORY] =
-                newFilterValue.category ?: FILTER_CATEGORY_DEFAULT
+            prefs[PreferencesKeys.FILTER_CATEGORY] = newFilterValue.category
         }
     }
 
     private object PreferencesKeys {
-        val FILTER_PLATFORM = stringPreferencesKey("platform")
-        val FILTER_SORT = stringPreferencesKey("sort")
-        val FILTER_CATEGORY = stringPreferencesKey("category")
+        val FILTER_PLATFORM = intPreferencesKey("platform")
+        val FILTER_SORT = intPreferencesKey("sort")
+        val FILTER_CATEGORY = intPreferencesKey("category")
     }
 }

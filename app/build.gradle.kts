@@ -73,7 +73,6 @@ dependencies {
 
     // Dagger Hilt
     implementation(Dependencies.Hilt.hiltAndroid)
-    implementation(Dependencies.Hilt.hiltViewModel)
     kapt(Dependencies.Hilt.hiltCompiler)
     kapt(Dependencies.Hilt.hiltAndroidCompiler)
 

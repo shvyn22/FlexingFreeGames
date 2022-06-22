@@ -9,6 +9,8 @@ interface LocalRepository {
 
     fun getBookmarks(): Flow<Resource<List<GameModel>>>
 
+    suspend fun isGameBookmarked(id: Int): Boolean
+
     suspend fun insertBookmark(item: DetailedGameModel)
 
     suspend fun deleteBookmark(id: Int)
