@@ -2,7 +2,6 @@ package shvyn22.flexingfreegames.presentation.browse
 
 import android.os.Bundle
 import android.view.View
-import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -12,6 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import shvyn22.flexingfreegames.R
 import shvyn22.flexingfreegames.databinding.FragmentBrowseBinding
 import shvyn22.flexingfreegames.presentation.adapters.GameAdapter
+import shvyn22.flexingfreegames.presentation.adapters.NoFilterArrayAdapter
 import shvyn22.flexingfreegames.util.ResourceError
 import shvyn22.flexingfreegames.util.collectOnLifecycle
 import shvyn22.flexingfreegames.util.toggleVisibility
@@ -28,14 +28,18 @@ class BrowseFragment : Fragment(R.layout.fragment_browse) {
         viewModel.handleIntent(BrowseIntent.GameClickIntent(it))
     }
 
-    private var platformAdapter: ArrayAdapter<String>? = null
-    private var sortAdapter: ArrayAdapter<String>? = null
-    private var categoryAdapter: ArrayAdapter<String>? = null
+    private lateinit var platforms: List<String>
+    private lateinit var sortTypes: List<String>
+    private lateinit var categories: List<String>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         _binding = FragmentBrowseBinding.bind(view)
+
+        platforms = resources.getStringArray(R.array.platforms).toList()
+        sortTypes = resources.getStringArray(R.array.sort_types).toList()
+        categories = resources.getStringArray(R.array.categories).toList()
 
         initUI()
         subscribeObservers()
@@ -45,22 +49,17 @@ class BrowseFragment : Fragment(R.layout.fragment_browse) {
         binding.apply {
             rvGames.adapter = gameAdapter
 
-            val platforms = resources.getStringArray(R.array.platforms).toList()
-            val sortTypes = resources.getStringArray(R.array.sort_types).toList()
-            val categories = resources.getStringArray(R.array.categories).toList()
-
-            platformAdapter =
-                ArrayAdapter(
-                    requireContext(),
-                    android.R.layout.simple_dropdown_item_1line,
-                    platforms
-                )
-            sortAdapter = ArrayAdapter(
+            val platformAdapter = NoFilterArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_dropdown_item_1line,
+                platforms
+            )
+            val sortAdapter = NoFilterArrayAdapter(
                 requireContext(),
                 android.R.layout.simple_dropdown_item_1line,
                 sortTypes
             )
-            categoryAdapter = ArrayAdapter(
+            val categoryAdapter = NoFilterArrayAdapter(
                 requireContext(),
                 android.R.layout.simple_dropdown_item_1line,
                 categories
@@ -73,19 +72,31 @@ class BrowseFragment : Fragment(R.layout.fragment_browse) {
 
                 tvShowFilter.setOnClickListener {
                     groupFilters.toggleVisibility(root)
+                    if (groupFilters.isVisible) {
+                        tvShowFilter.text = getString(R.string.text_hide)
+                        tvShowFilter.setCompoundDrawablesWithIntrinsicBounds(
+                            R.drawable.ic_arrow_up, 0, R.drawable.ic_arrow_up, 0
+                        )
+                    } else {
+                        tvShowFilter.text = getString(R.string.text_filters)
+                        tvShowFilter.setCompoundDrawablesWithIntrinsicBounds(
+                            R.drawable.ic_arrow_down, 0, R.drawable.ic_arrow_down, 0
+                        )
+                    }
                 }
 
-                btnSearch.setOnClickListener {
+                val clickAction: (View) -> Unit = {
                     viewModel.handleIntent(
                         BrowseIntent.LoadGamesIntent(
-                            platform = platformAdapter
-                                ?.getPosition(actvPlatform.text.toString()) ?: 0,
-                            sort = sortAdapter?.getPosition(actvSortBy.text.toString()) ?: 0,
-                            category = categoryAdapter
-                                ?.getPosition(actvCategory.text.toString()) ?: 0
+                            platform = platformAdapter.getPosition(actvPlatform.text.toString()),
+                            sort = sortAdapter.getPosition(actvSortBy.text.toString()),
+                            category = categoryAdapter.getPosition(actvCategory.text.toString())
                         )
                     )
                 }
+
+                btnSearch.setOnClickListener(clickAction)
+                btnRetry.setOnClickListener(clickAction)
             }
         }
     }
@@ -101,7 +112,11 @@ class BrowseFragment : Fragment(R.layout.fragment_browse) {
     }
 
     private fun handleState(state: BrowseState) {
-        binding.pbLoading.isVisible = state is BrowseState.LoadingState
+        binding.apply {
+            pbLoading.isVisible = state is BrowseState.LoadingState
+            btnRetry.isVisible = state is BrowseState.ErrorState
+            rvGames.isVisible = state is BrowseState.DataState
+        }
 
         if (state is BrowseState.DataState) gameAdapter.submitList(state.data)
     }
@@ -111,7 +126,7 @@ class BrowseFragment : Fragment(R.layout.fragment_browse) {
             is BrowseEvent.ShowErrorEvent -> {
                 Snackbar
                     .make(
-                        requireView(),
+                        binding.root,
                         when (event.error) {
                             is ResourceError.Fetching -> getString(R.string.text_error_fetching)
                             is ResourceError.NoBookmarks -> getString(R.string.text_error_no_bookmarks)
@@ -123,9 +138,9 @@ class BrowseFragment : Fragment(R.layout.fragment_browse) {
             }
             is BrowseEvent.UpdateFiltersEvent -> {
                 binding.panelFilter.apply {
-                    actvPlatform.setSelection(event.platform)
-                    actvSortBy.setSelection(event.sort)
-                    actvCategory.setSelection(event.category)
+                    actvPlatform.setText(platforms[event.platform], false)
+                    actvSortBy.setText(sortTypes[event.sort], false)
+                    actvCategory.setText(categories[event.category], false)
                 }
             }
             is BrowseEvent.NavigateToDetailsEvent -> {

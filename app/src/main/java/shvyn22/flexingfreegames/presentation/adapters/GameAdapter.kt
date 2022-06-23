@@ -3,10 +3,12 @@ package shvyn22.flexingfreegames.presentation.adapters
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import shvyn22.flexingfreegames.R
 import shvyn22.flexingfreegames.data.local.model.GameModel
 import shvyn22.flexingfreegames.databinding.ItemGameBinding
 import shvyn22.flexingfreegames.util.defaultRequests
@@ -14,7 +16,7 @@ import shvyn22.flexingfreegames.util.toggleVisibility
 
 class GameAdapter(
     private val onClick: (Int) -> Unit,
-): ListAdapter<GameModel, GameAdapter.GameViewHolder>(gameDiffUtil) {
+) : ListAdapter<GameModel, GameAdapter.GameViewHolder>(gameDiffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameViewHolder {
         return GameViewHolder(
@@ -30,7 +32,7 @@ class GameAdapter(
 
     inner class GameViewHolder(
         private val binding: ItemGameBinding
-    ): RecyclerView.ViewHolder(binding.root) {
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: GameModel) {
             binding.apply {
@@ -44,11 +46,25 @@ class GameAdapter(
                 tvTitle.text = item.title
                 tvPublisher.text = item.publisher
                 tvReleaseDate.text = item.releaseDate
+
                 panelDescription.apply {
                     tvDescription.text = item.description
 
                     tvShowDescription.setOnClickListener {
                         tvDescription.toggleVisibility(binding.root, Gravity.BOTTOM)
+                        if (tvDescription.isVisible) {
+                            tvShowDescription.text =
+                                itemView.resources.getString(R.string.text_hide)
+                            tvShowDescription.setCompoundDrawablesWithIntrinsicBounds(
+                                R.drawable.ic_arrow_up, 0, R.drawable.ic_arrow_up, 0
+                            )
+                        } else {
+                            tvShowDescription.text =
+                                itemView.resources.getString(R.string.text_description)
+                            tvShowDescription.setCompoundDrawablesWithIntrinsicBounds(
+                                R.drawable.ic_arrow_down, 0, R.drawable.ic_arrow_down, 0
+                            )
+                        }
                     }
                 }
             }

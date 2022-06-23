@@ -49,7 +49,6 @@ dependencies {
     // UI
     implementation(Dependencies.UI.material)
     implementation(Dependencies.UI.constraintLayout)
-    implementation(Dependencies.UI.carouselView)
 
     // Fragment
     implementation(Dependencies.Fragment.fragment)

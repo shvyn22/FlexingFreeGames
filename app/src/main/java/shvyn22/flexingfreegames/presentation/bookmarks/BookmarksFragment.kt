@@ -36,7 +36,13 @@ class BookmarksFragment : Fragment(R.layout.fragment_bookmarks) {
     }
 
     private fun initUI() {
-        binding.rvBookmarks.adapter = adapter
+        binding.apply {
+            rvBookmarks.adapter = adapter
+
+            btnRetry.setOnClickListener {
+                viewModel.handleIntent(BookmarksIntent.LoadBookmarksIntent)
+            }
+        }
     }
 
     private fun subscribeObservers() {
@@ -50,7 +56,11 @@ class BookmarksFragment : Fragment(R.layout.fragment_bookmarks) {
     }
 
     private fun handleState(state: BookmarksState) {
-        binding.pbLoading.isVisible = state is BookmarksState.LoadingState
+        binding.apply {
+            pbLoading.isVisible = state is BookmarksState.LoadingState
+            btnRetry.isVisible = state is BookmarksState.ErrorState
+            rvBookmarks.isVisible = state is BookmarksState.DataState
+        }
 
         if (state is BookmarksState.DataState) adapter.submitList(state.data)
     }
@@ -60,7 +70,7 @@ class BookmarksFragment : Fragment(R.layout.fragment_bookmarks) {
             is BookmarksEvent.ShowErrorEvent -> {
                 Snackbar
                     .make(
-                        requireView(),
+                        binding.root,
                         when (event.error) {
                             is ResourceError.Fetching -> getString(R.string.text_error_fetching)
                             is ResourceError.NoBookmarks -> getString(R.string.text_error_no_bookmarks)

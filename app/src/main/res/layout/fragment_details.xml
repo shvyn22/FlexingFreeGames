@@ -32,12 +32,26 @@
             android:orientation="vertical"
             app:layout_constraintGuide_begin="@dimen/padding_content_large" />
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/content_bottom"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_end="@dimen/padding_content_large" />
+
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/barrier_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:barrierDirection="bottom"
             app:constraint_referenced_ids="iv_thumbnail,tv_title,tv_genre" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier_icons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="iv_freetogame,iv_bookmark,iv_game" />
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/barrier_details"
@@ -51,7 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:constraint_referenced_ids="iv_thumbnail,tv_title,tv_genre,tv_publisher,tv_developer,tv_release_date,tv_platform,tv_description,panel_requirements,iv_freetogame,iv_bookmark,iv_game,rv_screenshots"
+            app:constraint_referenced_ids="iv_thumbnail,tv_title,tv_genre,tv_publisher,tv_developer,tv_release_date,tv_platform,tv_description,panel_requirements,iv_freetogame,iv_bookmark,iv_game,vp_screenshots"
             tools:visibility="visible" />
 
         <ImageView
@@ -90,6 +104,37 @@
             app:layout_constraintTop_toBottomOf="@id/tv_title"
             tools:text="Genre" />
 
+        <ImageView
+            android:id="@+id/iv_freetogame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:contentDescription="@string/text_accessibility_freetogame"
+            android:src="@drawable/ic_freetogame"
+            app:layout_constraintEnd_toStartOf="@id/iv_bookmark"
+            app:layout_constraintStart_toStartOf="@id/content_start"
+            app:layout_constraintTop_toBottomOf="@id/barrier_header" />
+
+        <ImageView
+            android:id="@+id/iv_bookmark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/text_accessibility_bookmark"
+            android:src="@drawable/ic_not_bookmarked"
+            app:layout_constraintEnd_toStartOf="@id/iv_game"
+            app:layout_constraintStart_toEndOf="@id/iv_freetogame"
+            app:layout_constraintTop_toTopOf="@id/iv_freetogame" />
+
+        <ImageView
+            android:id="@+id/iv_game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/text_accessibility_game_url"
+            android:src="@drawable/ic_web"
+            app:layout_constraintEnd_toEndOf="@id/content_end"
+            app:layout_constraintStart_toEndOf="@id/iv_bookmark"
+            app:layout_constraintTop_toTopOf="@id/iv_freetogame" />
+
         <TextView
             android:id="@+id/tv_publisher"
             style="@style/TextSmallStyle"
@@ -98,7 +143,7 @@
             android:layout_marginTop="@dimen/padding_content_small"
             app:layout_constraintEnd_toStartOf="@id/tv_release_date"
             app:layout_constraintStart_toStartOf="@id/iv_thumbnail"
-            app:layout_constraintTop_toBottomOf="@id/barrier_header"
+            app:layout_constraintTop_toBottomOf="@id/barrier_icons"
             tools:text="Publisher" />
 
         <TextView
@@ -110,7 +155,7 @@
             android:textAlignment="textEnd"
             app:layout_constraintEnd_toEndOf="@id/content_end"
             app:layout_constraintStart_toEndOf="@id/tv_publisher"
-            app:layout_constraintTop_toBottomOf="@id/barrier_header"
+            app:layout_constraintTop_toBottomOf="@id/barrier_icons"
             tools:text="22-06-2089" />
 
         <TextView
@@ -146,58 +191,28 @@
             app:layout_constraintTop_toBottomOf="@id/barrier_details"
             tools:text="Description" />
 
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vp_screenshots"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            app:layout_constraintBottom_toTopOf="@id/panel_requirements"
+            app:layout_constraintEnd_toEndOf="@id/content_end"
+            app:layout_constraintStart_toStartOf="@id/content_start"
+            app:layout_constraintTop_toBottomOf="@id/tv_description" />
+
         <include
             android:id="@+id/panel_requirements"
             layout="@layout/panel_requirements"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_small"
+            app:layout_constraintBottom_toBottomOf="@id/content_bottom"
             app:layout_constraintEnd_toEndOf="@id/content_end"
             app:layout_constraintStart_toStartOf="@id/content_start"
-            app:layout_constraintTop_toBottomOf="@id/tv_description" />
+            app:layout_constraintTop_toBottomOf="@id/vp_screenshots" />
 
-        <ImageView
-            android:id="@+id/iv_freetogame"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
-            android:contentDescription="@string/text_accessibility_freetogame"
-            android:src="@drawable/ic_freetogame"
-            app:layout_constraintEnd_toStartOf="@id/iv_bookmark"
-            app:layout_constraintStart_toStartOf="@id/content_start"
-            app:layout_constraintTop_toBottomOf="@id/panel_requirements" />
-
-        <ImageView
-            android:id="@+id/iv_bookmark"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/text_accessibility_bookmark"
-            android:src="@drawable/ic_not_bookmarked"
-            app:layout_constraintEnd_toStartOf="@id/iv_game"
-            app:layout_constraintStart_toEndOf="@id/iv_freetogame"
-            app:layout_constraintTop_toTopOf="@id/iv_freetogame" />
-
-        <ImageView
-            android:id="@+id/iv_game"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/text_accessibility_game_url"
-            android:src="@drawable/ic_web"
-            app:layout_constraintEnd_toEndOf="@id/content_end"
-            app:layout_constraintStart_toEndOf="@id/iv_bookmark"
-            app:layout_constraintTop_toTopOf="@id/iv_freetogame" />
-
-        <com.jackandphantom.carouselrecyclerview.CarouselRecyclerview
-            android:id="@+id/rv_screenshots"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
-            app:layout_constraintEnd_toEndOf="@id/content_end"
-            app:layout_constraintStart_toStartOf="@id/content_start"
-            app:layout_constraintTop_toBottomOf="@id/iv_freetogame"
-            tools:listitem="@layout/item_screenshot" />
-
-        <com.google.android.material.progressindicator.CircularProgressIndicator
+        <ProgressBar
             android:id="@+id/pb_loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

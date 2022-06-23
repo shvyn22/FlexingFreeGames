@@ -12,15 +12,15 @@ sealed class DetailsState {
 }
 
 sealed class DetailsEvent {
-    data class ShowErrorEvent(val error: ResourceError): DetailsEvent()
-    data class NavigateToFreeToGameEvent(val url: String): DetailsEvent()
-    data class NavigateToGameEvent(val url: String): DetailsEvent()
+    data class ShowErrorEvent(val error: ResourceError) : DetailsEvent()
+    data class NavigateToFreeToGameEvent(val url: String) : DetailsEvent()
+    data class NavigateToGameEvent(val url: String) : DetailsEvent()
 }
 
 sealed class DetailsIntent {
-    data class LoadGameIntent(val id: Int): DetailsIntent()
-    data class InsertBookmarkIntent(val item: DetailedGameModel): DetailsIntent()
-    data class DeleteBookmarkIntent(val id: Int): DetailsIntent()
-    data class FreeToGameIconClickIntent(val url: String): DetailsIntent()
-    data class GameIconClickIntent(val url: String): DetailsIntent()
+    data class LoadGameIntent(val id: Int) : DetailsIntent()
+    data class InsertBookmarkIntent(val item: DetailedGameModel) : DetailsIntent()
+    data class DeleteBookmarkIntent(val id: Int) : DetailsIntent()
+    data class FreeToGameIconClickIntent(val url: String) : DetailsIntent()
+    data class GameIconClickIntent(val url: String) : DetailsIntent()
 }

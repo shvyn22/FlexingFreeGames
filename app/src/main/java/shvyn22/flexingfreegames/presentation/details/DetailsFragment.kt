@@ -27,7 +27,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
     private var _binding: FragmentDetailsBinding? = null
     private val binding get() = _binding!!
 
-    private val adapter = ScreenshotAdapter()
+    private val screenshotAdapter = ScreenshotAdapter()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,10 +41,12 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
     }
 
     private fun initUI() {
-        binding.rvScreenshots.apply {
-            adapter = adapter
-            setAlpha(true)
-            setInfinite(true)
+        binding.apply {
+            vpScreenshots.adapter = screenshotAdapter
+
+            btnRetry.setOnClickListener {
+                viewModel.handleIntent(DetailsIntent.LoadGameIntent(args.id))
+            }
         }
     }
 
@@ -61,14 +63,8 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
     private fun handleState(state: DetailsState) {
         binding.apply {
             pbLoading.isVisible = state is DetailsState.LoadingState
+            btnRetry.isVisible = state is DetailsState.ErrorState
             groupContent.isVisible = state is DetailsState.DataState
-
-            btnRetry.apply {
-                isVisible = state is DetailsState.ErrorState
-                setOnClickListener {
-                    viewModel.handleIntent(DetailsIntent.LoadGameIntent(args.id))
-                }
-            }
 
             if (state is DetailsState.DataState) {
                 val game = state.data
@@ -86,13 +82,19 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
                 tvPlatform.text = game.platform
                 tvDescription.text = game.detailedDescription
 
+                screenshotAdapter.submitList(game.screenshots)
+
                 if (game.systemRequirements != null) {
                     panelRequirements.apply {
-                        tvOs.text = game.systemRequirements.os
-                        tvProcessor.text = game.systemRequirements.processor
-                        tvGraphics.text = game.systemRequirements.graphics
-                        tvMemory.text = game.systemRequirements.memory
-                        tvStorage.text = game.systemRequirements.storage
+                        tvOs.text = getString(R.string.text_os, game.systemRequirements.os)
+                        tvProcessor.text =
+                            getString(R.string.text_processor, game.systemRequirements.processor)
+                        tvGraphics.text =
+                            getString(R.string.text_graphics, game.systemRequirements.graphics)
+                        tvMemory.text =
+                            getString(R.string.text_memory, game.systemRequirements.memory)
+                        tvStorage.text =
+                            getString(R.string.text_storage, game.systemRequirements.storage)
                     }
                 } else panelRequirements.root.isVisible = false
 
@@ -121,8 +123,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
                         )
                     }
                 }
-
-                adapter.submitList(game.screenshots)
             }
         }
     }
@@ -132,7 +132,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
             is DetailsEvent.ShowErrorEvent -> {
                 Snackbar
                     .make(
-                        requireView(),
+                        binding.root,
                         when (event.error) {
                             is ResourceError.Fetching -> getString(R.string.text_error_fetching)
                             is ResourceError.NoBookmarks -> getString(R.string.text_error_no_bookmarks)

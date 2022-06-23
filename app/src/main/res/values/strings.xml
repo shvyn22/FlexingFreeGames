@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">FlexingFreeGames</string>
 
-    <string name="text_description">Show description</string>
-    <string name="text_filter">Show filter</string>
+    <string name="text_description">Description</string>
+    <string name="text_filters">Filters</string>
+    <string name="text_hide">Hide</string>
 
     <string name="text_os">OS: %s</string>
     <string name="text_processor">Processor: %s</string>
@@ -17,6 +18,9 @@
     <string name="text_error_no_bookmarks">No bookmarks were found</string>
 
     <string name="text_accessibility_thumb">Game thumbnail</string>
+    <string name="text_accessibility_screenshot">Game screenshot</string>
+    <string name="text_accessibility_previous">Previous screenshot</string>
+    <string name="text_accessibility_next">Next screenshot</string>
     <string name="text_accessibility_freetogame">Go to FreeToGame.com</string>
     <string name="text_accessibility_game_url">Go to the game\'s store page</string>
     <string name="text_accessibility_bookmark">Bookmark game</string>

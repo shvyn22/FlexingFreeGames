@@ -1,8 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.jackandphantom.carouselrecyclerview.view.ReflectionImageView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/iv_screenshot"
-    android:layout_width="@dimen/width_screenshot"
-    android:layout_height="@dimen/height_screenshot"
-    tools:src="@tools:sample/backgrounds/scenic" />
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/iv_previous"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/iv_screenshot"
+        android:layout_alignBottom="@id/iv_screenshot"
+        android:layout_toStartOf="@id/iv_screenshot"
+        android:contentDescription="@string/text_accessibility_previous"
+        android:src="@drawable/ic_arrow_start" />
+
+    <ImageView
+        android:id="@+id/iv_screenshot"
+        android:layout_width="@dimen/width_screenshot"
+        android:layout_height="@dimen/height_screenshot"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/text_accessibility_screenshot"
+        tools:src="@tools:sample/backgrounds/scenic" />
+
+    <ImageView
+        android:id="@+id/iv_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/iv_screenshot"
+        android:layout_alignBottom="@id/iv_screenshot"
+        android:layout_toEndOf="@id/iv_screenshot"
+        android:contentDescription="@string/text_accessibility_next"
+        android:src="@drawable/ic_arrow_end" />
+</RelativeLayout>

@@ -29,25 +29,8 @@ class DetailsViewModel @Inject constructor(
 
     fun handleIntent(intent: DetailsIntent) {
         when (intent) {
-            is DetailsIntent.LoadGameIntent -> {
-                viewModelScope.launch {
-                    remoteRepo.getGameDetails(intent.id).collect { resource ->
-                        when (resource) {
-                            is Resource.Success -> {
-                                val isBookmarked = localRepo.isGameBookmarked(resource.data.id)
-                                _detailsState.value =
-                                    DetailsState.DataState(resource.data, isBookmarked)
-                            }
-                            is Resource.Loading ->
-                                _detailsState.value = DetailsState.LoadingState
-                            is Resource.Error -> {
-                                _detailsState.value = DetailsState.ErrorState
-                                emitShowErrorEvent(resource.error)
-                            }
-                        }
-                    }
-                }
-            }
+            is DetailsIntent.LoadGameIntent ->
+                loadGame(intent.id)
             is DetailsIntent.InsertBookmarkIntent ->
                 insertBookmark(intent.item)
             is DetailsIntent.DeleteBookmarkIntent ->
@@ -56,6 +39,26 @@ class DetailsViewModel @Inject constructor(
                 emitNavigateToFreeToGameEvent(intent.url)
             is DetailsIntent.GameIconClickIntent ->
                 emitNavigateToGameEvent(intent.url)
+        }
+    }
+
+    private fun loadGame(id: Int) {
+        viewModelScope.launch {
+            remoteRepo.getGameDetails(id).collect { resource ->
+                when (resource) {
+                    is Resource.Success -> {
+                        val isBookmarked = localRepo.isGameBookmarked(resource.data.id)
+                        _detailsState.value =
+                            DetailsState.DataState(resource.data, isBookmarked)
+                    }
+                    is Resource.Loading ->
+                        _detailsState.value = DetailsState.LoadingState
+                    is Resource.Error -> {
+                        _detailsState.value = DetailsState.ErrorState
+                        emitShowErrorEvent(resource.error)
+                    }
+                }
+            }
         }
     }
 

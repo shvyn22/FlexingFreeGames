@@ -18,15 +18,15 @@ class BookmarksViewModel @Inject constructor(
     private val localRepo: LocalRepository,
 ) : ViewModel() {
 
-    init {
-        handleIntent(BookmarksIntent.LoadBookmarksIntent)
-    }
-
     private val _bookmarksState = MutableStateFlow<BookmarksState>(BookmarksState.LoadingState)
     val bookmarksState get() = _bookmarksState.asStateFlow()
 
     private val _bookmarksEvent = MutableSharedFlow<BookmarksEvent>()
     val bookmarksEvent get() = _bookmarksEvent.asSharedFlow()
+
+    init {
+        handleIntent(BookmarksIntent.LoadBookmarksIntent)
+    }
 
     fun handleIntent(intent: BookmarksIntent) {
         when (intent) {
@@ -43,8 +43,10 @@ class BookmarksViewModel @Inject constructor(
                         _bookmarksState.value = BookmarksState.DataState(resource.data)
                     is Resource.Loading ->
                         _bookmarksState.value = BookmarksState.LoadingState
-                    is Resource.Error ->
+                    is Resource.Error -> {
+                        _bookmarksState.value = BookmarksState.ErrorState
                         emitShowErrorEvent(resource.error)
+                    }
                 }
             }
         }

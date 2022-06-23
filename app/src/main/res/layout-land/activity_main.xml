@@ -4,7 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    tools:context=".presentation.MainActivity">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"
@@ -14,14 +16,15 @@
         app:defaultNavHost="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/nav_view"
-        app:navGraph="@navigation/nav_graph"
-        tools:context=".presentation.MainActivity" />
+        app:navGraph="@navigation/nav_graph" />
 
     <com.google.android.material.navigationrail.NavigationRailView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        app:itemIconTint="@color/nav_color_state"
+        app:itemTextColor="@color/nav_color_state"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/menu_nav" />
 </androidx.constraintlayout.widget.ConstraintLayout>

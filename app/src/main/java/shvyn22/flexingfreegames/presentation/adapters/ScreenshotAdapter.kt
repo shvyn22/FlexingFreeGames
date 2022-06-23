@@ -2,6 +2,7 @@ package shvyn22.flexingfreegames.presentation.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -30,10 +31,15 @@ class ScreenshotAdapter :
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: ScreenshotModel) {
-            Glide.with(itemView)
-                .load(item.image)
-                .defaultRequests()
-                .into(binding.ivScreenshot)
+            binding.apply {
+                Glide.with(itemView)
+                    .load(item.image)
+                    .defaultRequests()
+                    .into(ivScreenshot)
+
+                ivPrevious.isVisible = adapterPosition != 0
+                ivNext.isVisible = adapterPosition != currentList.lastIndex
+            }
         }
     }
 

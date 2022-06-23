@@ -41,7 +41,6 @@ class RemoteRepositoryImpl(
         } catch (e: JsonDataException) {
             emit(Resource.Error(ResourceError.Fetching))
         } catch (e: Exception) {
-            println("DEBUG_TAG: " + e.localizedMessage)
             emit(Resource.Error(ResourceError.Specified(e.localizedMessage ?: "")))
         }
     }

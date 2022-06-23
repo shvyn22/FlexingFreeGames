@@ -1,5 +1,6 @@
 package shvyn22.flexingfreegames.presentation
 
+import android.animation.LayoutTransition
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -22,6 +23,8 @@ class MainActivity : AppCompatActivity() {
 
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.root.layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment

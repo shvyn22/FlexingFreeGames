@@ -20,16 +20,16 @@ class BrowseViewModel @Inject constructor(
     private val remoteRepo: RemoteRepository,
 ) : ViewModel() {
 
-    init {
-        loadPreferences()
-        loadGames(0, 0, 0)
-    }
-
     private val _browseState = MutableStateFlow<BrowseState>(BrowseState.LoadingState)
     val browseState get() = _browseState.asStateFlow()
 
     private val _browseEvent = MutableSharedFlow<BrowseEvent>()
     val browseEvent get() = _browseEvent.asSharedFlow()
+
+    init {
+        handleIntent(BrowseIntent.LoadPreferencesIntent)
+        handleIntent(BrowseIntent.LoadGamesIntent(0, 0, 0))
+    }
 
     fun handleIntent(intent: BrowseIntent) {
         when (intent) {
@@ -56,7 +56,8 @@ class BrowseViewModel @Inject constructor(
         category: Int
     ) {
         viewModelScope.launch {
-            preferences.editFilterPreferences(FilterPreferences(platform, sort, category))
+            if (platform + sort + category != 0)
+                preferences.editFilterPreferences(FilterPreferences(platform, sort, category))
             remoteRepo
                 .getGames(
                     PLATFORMS[platform],
@@ -69,8 +70,10 @@ class BrowseViewModel @Inject constructor(
                             _browseState.value = BrowseState.DataState(resource.data)
                         is Resource.Loading ->
                             _browseState.value = BrowseState.LoadingState
-                        is Resource.Error ->
+                        is Resource.Error -> {
+                            _browseState.value = BrowseState.ErrorState
                             emitShowErrorEvent(resource.error)
+                        }
                     }
                 }
         }
