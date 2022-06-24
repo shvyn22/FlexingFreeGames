@@ -64,6 +64,7 @@ dependencies {
     androidTestImplementation(Dependencies.Tests.junit)
     androidTestImplementation(Dependencies.Tests.junitExt)
     androidTestImplementation(Dependencies.Tests.testCore)
+    androidTestImplementation(Dependencies.Tests.mockitoAndroid)
     androidTestImplementation(Dependencies.Tests.espressoCore)
     androidTestImplementation(Dependencies.Tests.espressoContrib)
 

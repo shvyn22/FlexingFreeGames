@@ -30,6 +30,7 @@ object Dependencies {
         private const val turbineVersion = "0.8.0"
         private const val hamcrestVersion = "1.3"
         private const val archTestingVersion = "2.1.0"
+        private const val mockitoVersion = "3.11.1"
         private const val espressoVersion = "3.4.0"
 
         const val junit = "junit:junit:$junitVersion"
@@ -38,6 +39,8 @@ object Dependencies {
         const val turbine = "app.cash.turbine:turbine:$turbineVersion"
         const val hamcrest = "org.hamcrest:hamcrest-all:$hamcrestVersion"
         const val archTesting = "androidx.arch.core:core-testing:$archTestingVersion"
+
+        const val mockitoAndroid = "org.mockito:mockito-android:$mockitoVersion"
 
         const val espressoCore = "androidx.test.espresso:espresso-core:$espressoVersion"
         const val espressoContrib = "androidx.test.espresso:espresso-contrib:$espressoVersion"

@@ -54,3 +54,5 @@ val game3 = DetailedGameDTO(
         )
     )
 )
+
+const val TEST_DATASTORE_FILENAME = "preferences_test"
