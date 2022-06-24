@@ -22,7 +22,7 @@ val CATEGORIES = listOf(
     "pvp",
     "pve",
     "pixel",
-    " voxel",
+    "voxel",
     "zombie",
     "turn-based",
     "first-person",

@@ -36,6 +36,10 @@ android {
     buildFeatures {
         viewBinding = true
     }
+    sourceSets {
+        get("androidTest").java.srcDirs("src/androidTest/java", "src/sharedTest/java")
+        get("test").java.srcDirs("src/test/java", "src/sharedTest/java")
+    }
 }
 
 dependencies {
@@ -49,6 +53,26 @@ dependencies {
     // UI
     implementation(Dependencies.UI.material)
     implementation(Dependencies.UI.constraintLayout)
+
+    // Tests
+    testImplementation(Dependencies.Tests.junit)
+    testImplementation(Dependencies.Tests.testCore)
+    testImplementation(Dependencies.Tests.turbine)
+    testImplementation(Dependencies.Tests.hamcrest)
+    testImplementation(Dependencies.Tests.archTesting)
+
+    androidTestImplementation(Dependencies.Tests.junit)
+    androidTestImplementation(Dependencies.Tests.junitExt)
+    androidTestImplementation(Dependencies.Tests.testCore)
+    androidTestImplementation(Dependencies.Tests.espressoCore)
+    androidTestImplementation(Dependencies.Tests.espressoContrib)
+
+    debugImplementation(Dependencies.Fragment.fragmentTesting)
+    androidTestImplementation(Dependencies.Navigation.navigationTesting)
+    testImplementation(Dependencies.Coroutines.coroutinesTesting)
+    androidTestImplementation(Dependencies.Coroutines.coroutinesTesting)
+    androidTestImplementation(Dependencies.Hilt.hiltTesting)
+    kaptAndroidTest(Dependencies.Hilt.hiltAndroidCompiler)
 
     // Fragment
     implementation(Dependencies.Fragment.fragment)

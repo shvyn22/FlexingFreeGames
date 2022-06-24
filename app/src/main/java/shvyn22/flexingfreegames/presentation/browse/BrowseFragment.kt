@@ -70,33 +70,44 @@ class BrowseFragment : Fragment(R.layout.fragment_browse) {
                 actvSortBy.setAdapter(sortAdapter)
                 actvCategory.setAdapter(categoryAdapter)
 
-                tvShowFilter.setOnClickListener {
-                    groupFilters.toggleVisibility(root)
-                    if (groupFilters.isVisible) {
-                        tvShowFilter.text = getString(R.string.text_hide)
-                        tvShowFilter.setCompoundDrawablesWithIntrinsicBounds(
-                            R.drawable.ic_arrow_up, 0, R.drawable.ic_arrow_up, 0
-                        )
-                    } else {
-                        tvShowFilter.text = getString(R.string.text_filters)
-                        tvShowFilter.setCompoundDrawablesWithIntrinsicBounds(
-                            R.drawable.ic_arrow_down, 0, R.drawable.ic_arrow_down, 0
-                        )
-                    }
-                }
+                tvShowFilter.setOnClickListener { toggleFiltersVisibility() }
 
                 val clickAction: (View) -> Unit = {
-                    viewModel.handleIntent(
-                        BrowseIntent.LoadGamesIntent(
-                            platform = platformAdapter.getPosition(actvPlatform.text.toString()),
-                            sort = sortAdapter.getPosition(actvSortBy.text.toString()),
-                            category = categoryAdapter.getPosition(actvCategory.text.toString())
-                        )
+                    searchGame(
+                        platform = platformAdapter.getPosition(actvPlatform.text.toString()),
+                        sort = sortAdapter.getPosition(actvSortBy.text.toString()),
+                        category = categoryAdapter.getPosition(actvCategory.text.toString())
                     )
                 }
 
                 btnSearch.setOnClickListener(clickAction)
                 btnRetry.setOnClickListener(clickAction)
+            }
+        }
+    }
+
+    private fun searchGame(
+        platform: Int,
+        sort: Int,
+        category: Int,
+    ) {
+        viewModel.handleIntent(BrowseIntent.LoadGamesIntent(platform, sort, category))
+        toggleFiltersVisibility()
+    }
+
+    private fun toggleFiltersVisibility() {
+        binding.panelFilter.apply {
+            groupFilters.toggleVisibility(root)
+            if (groupFilters.isVisible) {
+                tvShowFilter.text = getString(R.string.text_hide)
+                tvShowFilter.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.ic_arrow_up, 0, R.drawable.ic_arrow_up, 0
+                )
+            } else {
+                tvShowFilter.text = getString(R.string.text_filters)
+                tvShowFilter.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.ic_arrow_down, 0, R.drawable.ic_arrow_down, 0
+                )
             }
         }
     }
@@ -118,7 +129,10 @@ class BrowseFragment : Fragment(R.layout.fragment_browse) {
             rvGames.isVisible = state is BrowseState.DataState
         }
 
-        if (state is BrowseState.DataState) gameAdapter.submitList(state.data)
+        if (state is BrowseState.DataState)
+            gameAdapter.submitList(state.data) {
+                binding.rvGames.scrollToPosition(0)
+            }
     }
 
     private fun handleEvent(event: BrowseEvent) {
