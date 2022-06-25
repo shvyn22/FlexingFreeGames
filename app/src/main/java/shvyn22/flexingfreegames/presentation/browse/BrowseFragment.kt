@@ -1,5 +1,6 @@
 package shvyn22.flexingfreegames.presentation.browse
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
@@ -7,19 +8,24 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
-import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.Disposable
 import shvyn22.flexingfreegames.R
 import shvyn22.flexingfreegames.databinding.FragmentBrowseBinding
 import shvyn22.flexingfreegames.presentation.adapters.GameAdapter
 import shvyn22.flexingfreegames.presentation.adapters.NoFilterArrayAdapter
+import shvyn22.flexingfreegames.presentation.util.MultiViewModelFactory
 import shvyn22.flexingfreegames.util.ResourceError
-import shvyn22.flexingfreegames.util.collectOnLifecycle
+import shvyn22.flexingfreegames.util.singletonComponent
 import shvyn22.flexingfreegames.util.toggleVisibility
+import javax.inject.Inject
 
-@AndroidEntryPoint
 class BrowseFragment : Fragment(R.layout.fragment_browse) {
 
-    private val viewModel: BrowseViewModel by viewModels()
+    @Inject
+    lateinit var viewModelFactory: MultiViewModelFactory
+
+    private val viewModel: BrowseViewModel by viewModels { viewModelFactory }
 
     private var _binding: FragmentBrowseBinding? = null
     private val binding get() = _binding!!
@@ -31,6 +37,13 @@ class BrowseFragment : Fragment(R.layout.fragment_browse) {
     private lateinit var platforms: List<String>
     private lateinit var sortTypes: List<String>
     private lateinit var categories: List<String>
+
+    private var disposable: Disposable? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        context.singletonComponent.inject(this)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -113,13 +126,16 @@ class BrowseFragment : Fragment(R.layout.fragment_browse) {
     }
 
     private fun subscribeObservers() {
-        viewModel.browseState.collectOnLifecycle(viewLifecycleOwner) { state ->
+        viewModel.browseState.observe(viewLifecycleOwner) { state ->
             handleState(state)
         }
 
-        viewModel.browseEvent.collectOnLifecycle(viewLifecycleOwner) { event ->
-            handleEvent(event)
-        }
+        disposable = viewModel
+            .browseEvent
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { event ->
+                handleEvent(event)
+            }
     }
 
     private fun handleState(state: BrowseState) {
@@ -163,6 +179,11 @@ class BrowseFragment : Fragment(R.layout.fragment_browse) {
                 )
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        disposable?.dispose()
     }
 
     override fun onDestroy() {

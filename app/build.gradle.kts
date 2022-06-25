@@ -2,7 +2,6 @@ plugins {
     id("com.android.application")
     id("kotlin-android")
     id("kotlin-kapt")
-    id("dagger.hilt.android.plugin")
     id("androidx.navigation.safeargs.kotlin")
 }
 
@@ -15,8 +14,6 @@ android {
         targetSdk = Config.targetSdk
         versionCode = Config.versionCode
         versionName = Config.versionName
-
-        testInstrumentationRunner = Config.testInstrumentationRunner
     }
 
     buildTypes {
@@ -36,10 +33,6 @@ android {
     buildFeatures {
         viewBinding = true
     }
-    sourceSets {
-        get("androidTest").java.srcDirs("src/androidTest/java", "src/sharedTest/java")
-        get("test").java.srcDirs("src/test/java", "src/sharedTest/java")
-    }
 }
 
 dependencies {
@@ -54,32 +47,12 @@ dependencies {
     implementation(Dependencies.UI.material)
     implementation(Dependencies.UI.constraintLayout)
 
-    // Tests
-    testImplementation(Dependencies.Tests.junit)
-    testImplementation(Dependencies.Tests.testCore)
-    testImplementation(Dependencies.Tests.turbine)
-    testImplementation(Dependencies.Tests.hamcrest)
-    testImplementation(Dependencies.Tests.archTesting)
-
-    androidTestImplementation(Dependencies.Tests.junit)
-    androidTestImplementation(Dependencies.Tests.junitExt)
-    androidTestImplementation(Dependencies.Tests.testCore)
-    androidTestImplementation(Dependencies.Tests.mockitoAndroid)
-    androidTestImplementation(Dependencies.Tests.espressoCore)
-    androidTestImplementation(Dependencies.Tests.espressoContrib)
-
-    debugImplementation(Dependencies.Fragment.fragmentTesting)
-    androidTestImplementation(Dependencies.Navigation.navigationTesting)
-    testImplementation(Dependencies.Coroutines.coroutinesTesting)
-    androidTestImplementation(Dependencies.Coroutines.coroutinesTesting)
-    androidTestImplementation(Dependencies.Hilt.hiltTesting)
-    kaptAndroidTest(Dependencies.Hilt.hiltAndroidCompiler)
-
     // Fragment
     implementation(Dependencies.Fragment.fragment)
 
     // Lifecycle
     implementation(Dependencies.Lifecycle.lifecycleRuntime)
+    implementation(Dependencies.Lifecycle.lifecycleLiveData)
     implementation(Dependencies.Lifecycle.lifecycleViewModel)
 
     // Navigation
@@ -89,23 +62,24 @@ dependencies {
     // Room
     implementation(Dependencies.Room.roomRuntime)
     kapt(Dependencies.Room.roomCompiler)
-    implementation(Dependencies.Room.roomKtx)
+    implementation(Dependencies.Room.roomRx)
 
-    // Coroutines
-    implementation(Dependencies.Coroutines.coroutinesCore)
-    implementation(Dependencies.Coroutines.coroutinesAndroid)
+    // RxJava
+    implementation(Dependencies.RxJava.rxJava)
+    implementation(Dependencies.RxJava.rxJavaAndroid)
 
-    // Dagger Hilt
-    implementation(Dependencies.Hilt.hiltAndroid)
-    kapt(Dependencies.Hilt.hiltCompiler)
-    kapt(Dependencies.Hilt.hiltAndroidCompiler)
+    // Dagger
+    implementation(Dependencies.Dagger.dagger)
+    kapt(Dependencies.Dagger.daggerCompiler)
 
     // DataStore
     implementation(Dependencies.DataStore.preferencesDataStore)
+    implementation(Dependencies.DataStore.preferencesDataStoreRx)
 
     // Retrofit
     implementation(Dependencies.Retrofit.retrofit)
     implementation(Dependencies.Retrofit.moshiConverter)
+    implementation(Dependencies.Retrofit.retrofitRx)
 
     // Glide
     implementation(Dependencies.Glide.glide)

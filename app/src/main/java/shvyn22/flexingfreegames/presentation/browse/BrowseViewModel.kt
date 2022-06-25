@@ -1,30 +1,28 @@
 package shvyn22.flexingfreegames.presentation.browse
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.PublishSubject
 import shvyn22.flexingfreegames.data.preferences.FilterPreferences
 import shvyn22.flexingfreegames.data.preferences.PreferencesManager
 import shvyn22.flexingfreegames.repository.remote.RemoteRepository
 import shvyn22.flexingfreegames.util.*
 import javax.inject.Inject
 
-@HiltViewModel
 class BrowseViewModel @Inject constructor(
     private val preferences: PreferencesManager,
     private val remoteRepo: RemoteRepository,
 ) : ViewModel() {
 
-    private val _browseState = MutableStateFlow<BrowseState>(BrowseState.LoadingState)
-    val browseState get() = _browseState.asStateFlow()
+    private val _browseState = MutableLiveData<BrowseState>(BrowseState.LoadingState)
+    val browseState: LiveData<BrowseState> get() = _browseState
 
-    private val _browseEvent = MutableSharedFlow<BrowseEvent>()
-    val browseEvent get() = _browseEvent.asSharedFlow()
+    private val _browseEvent = PublishSubject.create<BrowseEvent>()
+    val browseEvent: Observable<BrowseEvent>
+        get() = _browseEvent.flatMap { Observable.just(it) }
 
     init {
         handleIntent(BrowseIntent.LoadPreferencesIntent)
@@ -43,11 +41,12 @@ class BrowseViewModel @Inject constructor(
     }
 
     private fun loadPreferences() {
-        viewModelScope.launch {
-            preferences.filterPreferences.collect { prefs ->
+        preferences
+            .filterPreferences
+            .subscribeOn(Schedulers.io())
+            .subscribe { prefs ->
                 emitUpdateFiltersEvent(prefs.platform, prefs.sort, prefs.category)
             }
-        }
     }
 
     private fun loadGames(
@@ -55,34 +54,31 @@ class BrowseViewModel @Inject constructor(
         sort: Int,
         category: Int
     ) {
-        viewModelScope.launch {
-            if (platform + sort + category != 0)
-                preferences.editFilterPreferences(FilterPreferences(platform, sort, category))
-            remoteRepo
-                .getGames(
-                    PLATFORMS[platform],
-                    SORT_TYPES[sort],
-                    CATEGORIES[category]
-                )
-                .collect { resource ->
-                    when (resource) {
-                        is Resource.Success ->
-                            _browseState.value = BrowseState.DataState(resource.data)
-                        is Resource.Loading ->
-                            _browseState.value = BrowseState.LoadingState
-                        is Resource.Error -> {
-                            _browseState.value = BrowseState.ErrorState
-                            emitShowErrorEvent(resource.error)
-                        }
+        if (platform + sort + category != 0)
+            preferences.editFilterPreferences(FilterPreferences(platform, sort, category))
+        remoteRepo
+            .getGames(
+                PLATFORMS[platform],
+                SORT_TYPES[sort],
+                CATEGORIES[category]
+            )
+            .subscribeOn(Schedulers.io())
+            .subscribe { resource ->
+                when (resource) {
+                    is Resource.Success ->
+                        _browseState.postValue(BrowseState.DataState(resource.data))
+                    is Resource.Loading ->
+                        _browseState.postValue(BrowseState.LoadingState)
+                    is Resource.Error -> {
+                        _browseState.postValue(BrowseState.ErrorState)
+                        emitShowErrorEvent(resource.error)
                     }
                 }
-        }
+            }
     }
 
     private fun emitShowErrorEvent(error: ResourceError) {
-        viewModelScope.launch {
-            _browseEvent.emit(BrowseEvent.ShowErrorEvent(error))
-        }
+        _browseEvent.onNext(BrowseEvent.ShowErrorEvent(error))
     }
 
     private fun emitUpdateFiltersEvent(
@@ -90,20 +86,16 @@ class BrowseViewModel @Inject constructor(
         sort: Int,
         category: Int,
     ) {
-        viewModelScope.launch {
-            _browseEvent.emit(
-                BrowseEvent.UpdateFiltersEvent(
-                    platform = platform,
-                    sort = sort,
-                    category = category
-                )
+        _browseEvent.onNext(
+            BrowseEvent.UpdateFiltersEvent(
+                platform = platform,
+                sort = sort,
+                category = category
             )
-        }
+        )
     }
 
     private fun emitNavigateEvent(id: Int) {
-        viewModelScope.launch {
-            _browseEvent.emit(BrowseEvent.NavigateToDetailsEvent(id))
-        }
+        _browseEvent.onNext(BrowseEvent.NavigateToDetailsEvent(id))
     }
 }

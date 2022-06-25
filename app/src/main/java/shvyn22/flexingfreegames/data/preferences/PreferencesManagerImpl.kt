@@ -1,17 +1,18 @@
 package shvyn22.flexingfreegames.data.preferences
 
-import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import androidx.datastore.rxjava3.RxDataStore
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 class PreferencesManagerImpl(
-    private val dataStore: DataStore<Preferences>
+    private val dataStore: RxDataStore<Preferences>
 ) : PreferencesManager {
 
-    override val filterPreferences: Flow<FilterPreferences> = dataStore.data.map { prefs ->
+    override val filterPreferences: Observable<FilterPreferences> = dataStore.data().map { prefs ->
         val platform = prefs[PreferencesKeys.FILTER_PLATFORM] ?: 0
         val sort = prefs[PreferencesKeys.FILTER_SORT] ?: 0
         val category = prefs[PreferencesKeys.FILTER_CATEGORY] ?: 0
@@ -21,13 +22,16 @@ class PreferencesManagerImpl(
             sort = sort,
             category = category
         )
-    }
+    }.toObservable()
 
-    override suspend fun editFilterPreferences(newFilterValue: FilterPreferences) {
-        dataStore.edit { prefs ->
-            prefs[PreferencesKeys.FILTER_PLATFORM] = newFilterValue.platform
-            prefs[PreferencesKeys.FILTER_SORT] = newFilterValue.sort
-            prefs[PreferencesKeys.FILTER_CATEGORY] = newFilterValue.category
+    override fun editFilterPreferences(newFilterValue: FilterPreferences) {
+        dataStore.updateDataAsync { prefs ->
+            val mutablePrefs = prefs.toMutablePreferences()
+            mutablePrefs[PreferencesKeys.FILTER_PLATFORM] = newFilterValue.platform
+            mutablePrefs[PreferencesKeys.FILTER_SORT] = newFilterValue.sort
+            mutablePrefs[PreferencesKeys.FILTER_CATEGORY] = newFilterValue.category
+
+            Single.just(mutablePrefs)
         }
     }
 

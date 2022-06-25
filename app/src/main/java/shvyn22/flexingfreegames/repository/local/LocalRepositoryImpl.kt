@@ -1,7 +1,8 @@
 package shvyn22.flexingfreegames.repository.local
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.transform
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.schedulers.Schedulers
 import shvyn22.flexingfreegames.data.local.dao.BookmarkDao
 import shvyn22.flexingfreegames.data.local.model.DetailedGameModel
 import shvyn22.flexingfreegames.data.local.model.GameModel
@@ -13,24 +14,36 @@ class LocalRepositoryImpl(
     private val dao: BookmarkDao,
 ) : LocalRepository {
 
-    override fun getBookmarks(): Flow<Resource<List<GameModel>>> = dao.getBookmarks().transform {
-        emit(Resource.Loading())
+    override fun getBookmarks(): Observable<Resource<List<GameModel>>> = Observable.create { sub ->
+        sub.onNext(Resource.Loading())
 
-        if (it.isEmpty())
-            emit(Resource.Error(ResourceError.NoBookmarks))
-        else
-            emit(Resource.Success(it))
+        dao
+            .getBookmarks()
+            .subscribeOn(Schedulers.io())
+            .subscribe {
+                if (it.isEmpty())
+                    sub.onNext(Resource.Error(ResourceError.NoBookmarks))
+                else
+                    sub.onNext(Resource.Success(it))
+            }
     }
 
-    override suspend fun isGameBookmarked(id: Int): Boolean {
-        return dao.isGameBookmarked(id)
+    override fun isGameBookmarked(id: Int): Single<Boolean> =
+        dao
+            .isGameBookmarked(id)
+            .subscribeOn(Schedulers.io())
+
+    override fun insertBookmark(item: DetailedGameModel) {
+        dao
+            .insertBookmark(fromDetailedGameToGame(item))
+            .subscribeOn(Schedulers.io())
+            .subscribe()
     }
 
-    override suspend fun insertBookmark(item: DetailedGameModel) {
-        dao.insertBookmark(fromDetailedGameToGame(item))
-    }
-
-    override suspend fun deleteBookmark(id: Int) {
-        dao.deleteBookmark(id)
+    override fun deleteBookmark(id: Int) {
+        dao
+            .deleteBookmark(id)
+            .subscribeOn(Schedulers.io())
+            .subscribe()
     }
 }

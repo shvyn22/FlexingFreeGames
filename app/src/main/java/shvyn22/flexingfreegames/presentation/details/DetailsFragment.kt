@@ -1,5 +1,6 @@
 package shvyn22.flexingfreegames.presentation.details
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -10,24 +11,33 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
-import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import shvyn22.flexingfreegames.R
 import shvyn22.flexingfreegames.databinding.FragmentDetailsBinding
 import shvyn22.flexingfreegames.presentation.adapters.ScreenshotAdapter
+import shvyn22.flexingfreegames.presentation.util.MultiViewModelFactory
 import shvyn22.flexingfreegames.util.ResourceError
-import shvyn22.flexingfreegames.util.collectOnLifecycle
 import shvyn22.flexingfreegames.util.defaultRequests
+import shvyn22.flexingfreegames.util.singletonComponent
+import javax.inject.Inject
 
-@AndroidEntryPoint
 class DetailsFragment : Fragment(R.layout.fragment_details) {
 
-    private val viewModel: DetailsViewModel by viewModels()
+    @Inject
+    lateinit var viewModelFactory: MultiViewModelFactory
+
+    private val viewModel: DetailsViewModel by viewModels { viewModelFactory }
     private val args: DetailsFragmentArgs by navArgs()
 
     private var _binding: FragmentDetailsBinding? = null
     private val binding get() = _binding!!
 
     private val screenshotAdapter = ScreenshotAdapter()
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        context.singletonComponent.inject(this)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -51,13 +61,16 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
     }
 
     private fun subscribeObservers() {
-        viewModel.detailsState.collectOnLifecycle(viewLifecycleOwner) { state ->
+        viewModel.detailsState.observe(viewLifecycleOwner) { state ->
             handleState(state)
         }
 
-        viewModel.detailsEvent.collectOnLifecycle(viewLifecycleOwner) { event ->
-            handleEvent(event)
-        }
+        viewModel
+            .detailsEvent
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { event ->
+                handleEvent(event)
+            }
     }
 
     private fun handleState(state: DetailsState) {

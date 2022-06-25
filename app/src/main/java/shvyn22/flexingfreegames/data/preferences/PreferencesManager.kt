@@ -1,10 +1,10 @@
 package shvyn22.flexingfreegames.data.preferences
 
-import kotlinx.coroutines.flow.Flow
+import io.reactivex.rxjava3.core.Observable
 
 interface PreferencesManager {
 
-    val filterPreferences: Flow<FilterPreferences>
+    val filterPreferences: Observable<FilterPreferences>
 
-    suspend fun editFilterPreferences(newFilterValue: FilterPreferences)
+    fun editFilterPreferences(newFilterValue: FilterPreferences)
 }

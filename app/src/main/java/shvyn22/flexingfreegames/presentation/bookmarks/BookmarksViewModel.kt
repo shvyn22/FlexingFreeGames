@@ -1,28 +1,26 @@
 package shvyn22.flexingfreegames.presentation.bookmarks
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.PublishSubject
 import shvyn22.flexingfreegames.repository.local.LocalRepository
 import shvyn22.flexingfreegames.util.Resource
 import shvyn22.flexingfreegames.util.ResourceError
 import javax.inject.Inject
 
-@HiltViewModel
 class BookmarksViewModel @Inject constructor(
     private val localRepo: LocalRepository,
 ) : ViewModel() {
 
-    private val _bookmarksState = MutableStateFlow<BookmarksState>(BookmarksState.LoadingState)
-    val bookmarksState get() = _bookmarksState.asStateFlow()
+    private val _bookmarksState = MutableLiveData<BookmarksState>(BookmarksState.LoadingState)
+    val bookmarksState: LiveData<BookmarksState> get() = _bookmarksState
 
-    private val _bookmarksEvent = MutableSharedFlow<BookmarksEvent>()
-    val bookmarksEvent get() = _bookmarksEvent.asSharedFlow()
+    private val _bookmarksEvent = PublishSubject.create<BookmarksEvent>()
+    val bookmarksEvent: Observable<BookmarksEvent>
+        get() = _bookmarksEvent.flatMap { Observable.just(it) }
 
     init {
         handleIntent(BookmarksIntent.LoadBookmarksIntent)
@@ -36,31 +34,28 @@ class BookmarksViewModel @Inject constructor(
     }
 
     private fun loadBookmarks() {
-        viewModelScope.launch {
-            localRepo.getBookmarks().collect { resource ->
+        localRepo
+            .getBookmarks()
+            .subscribeOn(Schedulers.io())
+            .subscribe { resource ->
                 when (resource) {
                     is Resource.Success ->
-                        _bookmarksState.value = BookmarksState.DataState(resource.data)
+                        _bookmarksState.postValue(BookmarksState.DataState(resource.data))
                     is Resource.Loading ->
-                        _bookmarksState.value = BookmarksState.LoadingState
+                        _bookmarksState.postValue(BookmarksState.LoadingState)
                     is Resource.Error -> {
-                        _bookmarksState.value = BookmarksState.ErrorState
+                        _bookmarksState.postValue(BookmarksState.ErrorState)
                         emitShowErrorEvent(resource.error)
                     }
                 }
             }
-        }
     }
 
     private fun emitShowErrorEvent(error: ResourceError) {
-        viewModelScope.launch {
-            _bookmarksEvent.emit(BookmarksEvent.ShowErrorEvent(error))
-        }
+        _bookmarksEvent.onNext(BookmarksEvent.ShowErrorEvent(error))
     }
 
     private fun emitNavigateEvent(id: Int) {
-        viewModelScope.launch {
-            _bookmarksEvent.emit(BookmarksEvent.NavigateToDetailsEvent(id))
-        }
+        _bookmarksEvent.onNext(BookmarksEvent.NavigateToDetailsEvent(id))
     }
 }

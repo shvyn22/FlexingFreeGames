@@ -1,9 +1,7 @@
-package shvyn22.flexingfreegames.di
+package shvyn22.flexingfreegames.di.module
 
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import shvyn22.flexingfreegames.data.local.dao.BookmarkDao
 import shvyn22.flexingfreegames.data.remote.api.ApiService
 import shvyn22.flexingfreegames.repository.local.LocalRepository
@@ -13,7 +11,6 @@ import shvyn22.flexingfreegames.repository.remote.RemoteRepositoryImpl
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
 object RepositoryModule {
 
     @Singleton

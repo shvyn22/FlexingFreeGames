@@ -1,5 +1,7 @@
 package shvyn22.flexingfreegames.repository.local
 
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.flow.Flow
 import shvyn22.flexingfreegames.data.local.model.DetailedGameModel
 import shvyn22.flexingfreegames.data.local.model.GameModel
@@ -7,11 +9,11 @@ import shvyn22.flexingfreegames.util.Resource
 
 interface LocalRepository {
 
-    fun getBookmarks(): Flow<Resource<List<GameModel>>>
+    fun getBookmarks(): Observable<Resource<List<GameModel>>>
 
-    suspend fun isGameBookmarked(id: Int): Boolean
+    fun isGameBookmarked(id: Int): Single<Boolean>
 
-    suspend fun insertBookmark(item: DetailedGameModel)
+    fun insertBookmark(item: DetailedGameModel)
 
-    suspend fun deleteBookmark(id: Int)
+    fun deleteBookmark(id: Int)
 }

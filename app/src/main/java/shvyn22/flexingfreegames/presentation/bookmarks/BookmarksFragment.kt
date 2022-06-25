@@ -1,5 +1,6 @@
 package shvyn22.flexingfreegames.presentation.bookmarks
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
@@ -7,23 +8,35 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
-import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.Disposable
 import shvyn22.flexingfreegames.R
 import shvyn22.flexingfreegames.databinding.FragmentBookmarksBinding
 import shvyn22.flexingfreegames.presentation.adapters.GameAdapter
+import shvyn22.flexingfreegames.presentation.util.MultiViewModelFactory
 import shvyn22.flexingfreegames.util.ResourceError
-import shvyn22.flexingfreegames.util.collectOnLifecycle
+import shvyn22.flexingfreegames.util.singletonComponent
+import javax.inject.Inject
 
-@AndroidEntryPoint
 class BookmarksFragment : Fragment(R.layout.fragment_bookmarks) {
 
-    private val viewModel: BookmarksViewModel by viewModels()
+    @Inject
+    lateinit var viewModelFactory: MultiViewModelFactory
+
+    private val viewModel: BookmarksViewModel by viewModels { viewModelFactory }
 
     private var _binding: FragmentBookmarksBinding? = null
     private val binding get() = _binding!!
 
     private val adapter = GameAdapter {
         viewModel.handleIntent(BookmarksIntent.BookmarkClickIntent(it))
+    }
+
+    private var disposable: Disposable? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        context.singletonComponent.inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -46,13 +59,16 @@ class BookmarksFragment : Fragment(R.layout.fragment_bookmarks) {
     }
 
     private fun subscribeObservers() {
-        viewModel.bookmarksState.collectOnLifecycle(viewLifecycleOwner) { state ->
+        viewModel.bookmarksState.observe(viewLifecycleOwner) { state ->
             handleState(state)
         }
 
-        viewModel.bookmarksEvent.collectOnLifecycle(viewLifecycleOwner) { event ->
-            handleEvent(event)
-        }
+        disposable = viewModel
+            .bookmarksEvent
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { event ->
+                handleEvent(event)
+            }
     }
 
     private fun handleState(state: BookmarksState) {
@@ -86,6 +102,11 @@ class BookmarksFragment : Fragment(R.layout.fragment_bookmarks) {
                 )
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        disposable?.dispose()
     }
 
     override fun onDestroy() {

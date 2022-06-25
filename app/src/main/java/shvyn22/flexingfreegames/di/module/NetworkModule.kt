@@ -1,17 +1,15 @@
-package shvyn22.flexingfreegames.di
+package shvyn22.flexingfreegames.di.module
 
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import shvyn22.flexingfreegames.data.remote.api.ApiService
 import shvyn22.flexingfreegames.util.BASE_URL
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
 object NetworkModule {
 
     @Singleton
@@ -19,6 +17,7 @@ object NetworkModule {
     fun provideRetrofit(): Retrofit =
         Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
 
