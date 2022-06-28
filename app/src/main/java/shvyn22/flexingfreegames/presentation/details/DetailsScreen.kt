@@ -1,34 +1,107 @@
 package shvyn22.flexingfreegames.presentation.details
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.core.content.ContextCompat.startActivity
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import shvyn22.flexingfreegames.R
 import shvyn22.flexingfreegames.data.local.model.DetailedGameModel
-import shvyn22.flexingfreegames.presentation.ui.components.RequirementsPanel
-import shvyn22.flexingfreegames.presentation.ui.components.ScreenshotItem
+import shvyn22.flexingfreegames.presentation.ui.components.items.ScreenshotItem
+import shvyn22.flexingfreegames.presentation.ui.components.panels.RequirementsPanel
 import shvyn22.flexingfreegames.presentation.ui.theme.dimens
+import shvyn22.flexingfreegames.util.ResourceError
 
+@ExperimentalPagerApi
 @Composable
 fun DetailsScreen(
-
+    id: Int,
+    onShowError: (ResourceError) -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: DetailsViewModel = hiltViewModel()
 ) {
+    LaunchedEffect(id) {
+        viewModel.handleIntent(DetailsIntent.LoadGameIntent(id))
+    }
 
+    val context = LocalContext.current
+
+    val detailsState = viewModel.detailsState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.detailsEvent.collect { event ->
+            when (event) {
+                is DetailsEvent.ShowErrorEvent -> onShowError(event.error)
+                is DetailsEvent.NavigateToFreeToGameEvent -> {
+                    Intent(Intent.ACTION_VIEW, Uri.parse(event.url)).also {
+                        startActivity(context, it, null)
+                    }
+                }
+                is DetailsEvent.NavigateToGameEvent -> {
+                    Intent(Intent.ACTION_VIEW, Uri.parse(event.url)).also {
+                        startActivity(context, it, null)
+                    }
+                }
+            }
+        }
+    }
+
+    detailsState.value.let { state ->
+        when (state) {
+            is DetailsState.DataState ->
+                DetailsDataContent(
+                    game = state.data,
+                    isBookmarked = state.isBookmarked,
+                    onInsertBookmark = {
+                        viewModel.handleIntent(DetailsIntent.InsertBookmarkIntent(it))
+                    },
+                    onDeleteBookmark = {
+                        viewModel.handleIntent(DetailsIntent.DeleteBookmarkIntent(it))
+                    },
+                    onFreeToGameIconClick = {
+                        viewModel.handleIntent(DetailsIntent.FreeToGameIconClickIntent(it))
+                    },
+                    onGameIconClick = {
+                        viewModel.handleIntent(DetailsIntent.GameIconClickIntent(it))
+                    },
+                    modifier = modifier
+                )
+            is DetailsState.ErrorState ->
+                DetailsErrorContent(
+                    onRetryAction = {
+                        viewModel.handleIntent(DetailsIntent.LoadGameIntent(id))
+                    },
+                    modifier = modifier
+                )
+            is DetailsState.LoadingState ->
+                DetailsLoadingContent(
+                    modifier = modifier
+                )
+        }
+    }
 }
 
 @ExperimentalPagerApi
@@ -36,16 +109,18 @@ fun DetailsScreen(
 fun DetailsDataContent(
     game: DetailedGameModel,
     isBookmarked: Boolean,
-    onBookmarkIconClick: (Boolean) -> Unit,
+    onInsertBookmark: (DetailedGameModel) -> Unit,
+    onDeleteBookmark: (Int) -> Unit,
     onFreeToGameIconClick: (String) -> Unit,
     onGameIconClick: (String) -> Unit,
     modifier: Modifier,
 ) {
     val pagerState = rememberPagerState()
+    val scrollState = rememberScrollState()
 
     ConstraintLayout(
         modifier = modifier
-            .fillMaxSize()
+            .verticalScroll(scrollState)
     ) {
         val (
             imageThumbnail,
@@ -62,6 +137,8 @@ fun DetailsDataContent(
         ) = createRefs()
 
         val guidelineTop = createGuidelineFromTop(MaterialTheme.dimens.padding.paddingContentLarge)
+        val guidelineBottom =
+            createGuidelineFromBottom(MaterialTheme.dimens.padding.paddingContentLarge)
         val guidelineStart =
             createGuidelineFromStart(MaterialTheme.dimens.padding.paddingContentLarge)
         val guidelineEnd = createGuidelineFromEnd(MaterialTheme.dimens.padding.paddingContentLarge)
@@ -110,7 +187,6 @@ fun DetailsDataContent(
             style = MaterialTheme.typography.body2,
             textAlign = TextAlign.Center,
             modifier = Modifier
-                .padding(top = MaterialTheme.dimens.padding.paddingSmall)
                 .constrainAs(textGenre) {
                     top.linkTo(textTitle.bottom)
                     bottom.linkTo(imageThumbnail.bottom)
@@ -118,14 +194,21 @@ fun DetailsDataContent(
                     end.linkTo(textTitle.end)
                     width = Dimension.fillToConstraints
                 }
+                .padding(
+                    top = MaterialTheme.dimens.padding.paddingSmall,
+                    start = MaterialTheme.dimens.padding.paddingSmall
+                )
         )
 
         Row(
+            horizontalArrangement = Arrangement.SpaceAround,
             modifier = Modifier
+                .padding(top = MaterialTheme.dimens.padding.paddingMedium)
                 .constrainAs(rowIcons) {
                     top.linkTo(barrierHeader)
                     start.linkTo(guidelineStart)
                     end.linkTo(guidelineEnd)
+                    width = Dimension.fillToConstraints
                 }
         ) {
             Image(
@@ -142,7 +225,10 @@ fun DetailsDataContent(
                 ),
                 contentDescription = stringResource(id = R.string.text_accessibility_bookmark),
                 modifier = Modifier
-                    .clickable { onBookmarkIconClick(!isBookmarked) }
+                    .clickable {
+                        if (isBookmarked) onDeleteBookmark(game.id)
+                        else onInsertBookmark(game)
+                    }
                     .padding(horizontal = MaterialTheme.dimens.padding.paddingMedium)
             )
 
@@ -158,7 +244,7 @@ fun DetailsDataContent(
             text = game.publisher,
             style = MaterialTheme.typography.body2,
             modifier = Modifier
-                .padding(top = MaterialTheme.dimens.padding.paddingSmall)
+                .padding(top = MaterialTheme.dimens.padding.paddingMedium)
                 .constrainAs(textPublisher) {
                     top.linkTo(rowIcons.bottom)
                     start.linkTo(guidelineStart)
@@ -185,7 +271,7 @@ fun DetailsDataContent(
             style = MaterialTheme.typography.body2,
             textAlign = TextAlign.End,
             modifier = Modifier
-                .padding(top = MaterialTheme.dimens.padding.paddingSmall)
+                .padding(top = MaterialTheme.dimens.padding.paddingMedium)
                 .constrainAs(textReleaseDate) {
                     top.linkTo(rowIcons.bottom)
                     start.linkTo(textPublisher.end)
@@ -225,6 +311,7 @@ fun DetailsDataContent(
             state = pagerState,
             count = game.screenshots.size,
             modifier = Modifier
+                .padding(top = MaterialTheme.dimens.padding.paddingMedium)
                 .constrainAs(listScreenshots) {
                     top.linkTo(textDescription.bottom)
                     start.linkTo(guidelineStart)
@@ -235,7 +322,9 @@ fun DetailsDataContent(
             ScreenshotItem(
                 screenshot = game.screenshots[index],
                 isFirst = index == 0,
-                isLast = index == game.screenshots.lastIndex
+                isLast = index == game.screenshots.lastIndex,
+                modifier = Modifier
+                    .fillMaxWidth()
             )
         }
 
@@ -243,12 +332,15 @@ fun DetailsDataContent(
             RequirementsPanel(
                 requirements = requirements,
                 modifier = Modifier
+                    .padding(top = MaterialTheme.dimens.padding.paddingMedium)
                     .constrainAs(panelRequirements) {
                         top.linkTo(listScreenshots.bottom)
+                        bottom.linkTo(guidelineBottom)
                         start.linkTo(guidelineStart)
                         end.linkTo(guidelineEnd)
                         width = Dimension.fillToConstraints
                     }
+
             )
         }
     }
@@ -256,7 +348,7 @@ fun DetailsDataContent(
 
 @Composable
 fun DetailsErrorContent(
-    onRetryClick: () -> Unit,
+    onRetryAction: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -264,9 +356,21 @@ fun DetailsErrorContent(
         modifier = modifier,
     ) {
         Button(
-            onClick = onRetryClick
+            onClick = onRetryAction
         ) {
             Text(text = stringResource(id = R.string.text_action_retry))
         }
+    }
+}
+
+@Composable
+fun DetailsLoadingContent(
+    modifier: Modifier = Modifier
+) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+    ) {
+        CircularProgressIndicator()
     }
 }

@@ -1,20 +1,26 @@
-package shvyn22.flexingfreegames.presentation.ui.components
+package shvyn22.flexingfreegames.presentation.ui.components.panels
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import shvyn22.flexingfreegames.R
+import shvyn22.flexingfreegames.presentation.ui.components.DrawableWrapper
+import shvyn22.flexingfreegames.presentation.ui.components.DropdownList
+import shvyn22.flexingfreegames.presentation.ui.theme.AppTheme
 import shvyn22.flexingfreegames.presentation.ui.theme.dimens
+import shvyn22.flexingfreegames.util.Orientation
+import shvyn22.flexingfreegames.util.rememberOrientation
 
 @Composable
 fun FilterPanel(
@@ -24,6 +30,7 @@ fun FilterPanel(
     onSortChange: (Int) -> Unit,
     categoryIndex: Int,
     onCategoryChange: (Int) -> Unit,
+    onSearchAction: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val orientation = rememberOrientation()
@@ -36,9 +43,12 @@ fun FilterPanel(
 
     Card(
         modifier = modifier
-            .padding(MaterialTheme.dimens.padding.paddingContentSmall)
     ) {
-        Column {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(MaterialTheme.dimens.padding.paddingContentSmall)
+        ) {
             if (isExpanded.value) {
                 when (orientation) {
                     Orientation.PORTRAIT -> {
@@ -92,6 +102,12 @@ fun FilterPanel(
                         }
                     }
                 }
+
+                Button(
+                    onClick = onSearchAction
+                ) {
+                    Text(text = stringResource(id = R.string.text_action_search))
+                }
             }
 
             val drawableRes =
@@ -102,6 +118,7 @@ fun FilterPanel(
                 drawableStartRes = drawableRes,
                 drawableEndRes = drawableRes,
                 modifier = Modifier
+                    .fillMaxWidth()
                     .padding(top = MaterialTheme.dimens.padding.paddingMedium)
                     .clickable {
                         isExpanded.value = !isExpanded.value
@@ -109,8 +126,8 @@ fun FilterPanel(
             ) {
                 Text(
                     text = stringResource(
-                        id = if (isExpanded.value) R.string.text_filters
-                        else R.string.text_hide
+                        id = if (isExpanded.value) R.string.text_hide
+                        else R.string.text_filters
                     ),
                     style = MaterialTheme.typography.caption
                 )

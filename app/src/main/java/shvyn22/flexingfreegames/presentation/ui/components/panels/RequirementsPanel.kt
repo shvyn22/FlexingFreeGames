@@ -1,4 +1,4 @@
-package shvyn22.flexingfreegames.presentation.ui.components
+package shvyn22.flexingfreegames.presentation.ui.components.panels
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth

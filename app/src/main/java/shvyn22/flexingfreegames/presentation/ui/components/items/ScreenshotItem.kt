@@ -1,8 +1,8 @@
-package shvyn22.flexingfreegames.presentation.ui.components
+package shvyn22.flexingfreegames.presentation.ui.components.items
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -23,7 +23,6 @@ fun ScreenshotItem(
 ) {
     ConstraintLayout(
         modifier = modifier
-            .fillMaxWidth()
     ) {
         val (
             startArrow,
@@ -41,7 +40,6 @@ fun ScreenshotItem(
                         top.linkTo(image.top)
                         bottom.linkTo(image.bottom)
                         start.linkTo(parent.start)
-                        end.linkTo(image.start)
                     }
             )
         }
@@ -55,7 +53,6 @@ fun ScreenshotItem(
                     .constrainAs(endArrow) {
                         top.linkTo(image.top)
                         bottom.linkTo(image.bottom)
-                        start.linkTo(image.end)
                         end.linkTo(parent.end)
                     }
             )
@@ -71,11 +68,15 @@ fun ScreenshotItem(
             ),
             contentDescription = stringResource(id = R.string.text_accessibility_screenshot),
             modifier = Modifier
+                .size(
+                    width = MaterialTheme.dimens.size.widthScreenshot,
+                    height = MaterialTheme.dimens.size.heightScreenshot
+                )
                 .constrainAs(image) {
                     top.linkTo(parent.top)
                     bottom.linkTo(parent.bottom)
-                    start.linkTo(startArrow.end)
-                    end.linkTo(endArrow.start)
+                    start.linkTo(if (!isFirst) startArrow.end else parent.start)
+                    end.linkTo(if (!isLast) endArrow.start else parent.end)
                 }
         )
     }

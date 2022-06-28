@@ -1,4 +1,4 @@
-package shvyn22.flexingfreegames.presentation.ui.components
+package shvyn22.flexingfreegames.util
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration

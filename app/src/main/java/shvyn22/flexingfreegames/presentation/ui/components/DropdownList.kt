@@ -43,6 +43,7 @@ fun DropdownList(
         ) {
             Text(
                 text = items[selectedIndex],
+                style = MaterialTheme.typography.caption
             )
 
             Image(

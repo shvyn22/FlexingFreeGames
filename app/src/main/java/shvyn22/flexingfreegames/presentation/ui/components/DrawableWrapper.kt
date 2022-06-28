@@ -28,6 +28,18 @@ fun DrawableWrapper(
             contentRef
         ) = createRefs()
 
+        Box(
+            modifier = Modifier
+                .constrainAs(contentRef) {
+                    top.linkTo(drawableTopRes?.let { drawableTop.bottom } ?: parent.top)
+                    bottom.linkTo(drawableBottomRes?.let { drawableBottom.top } ?: parent.bottom)
+                    start.linkTo(drawableStartRes?.let { drawableStart.end } ?: parent.start)
+                    end.linkTo(drawableEndRes?.let { drawableEnd.start } ?: parent.end)
+                }
+        ) {
+            content()
+        }
+
         drawableTopRes?.let {
             Image(
                 painter = painterResource(id = it),
@@ -68,24 +80,12 @@ fun DrawableWrapper(
             Image(
                 painter = painterResource(id = it),
                 contentDescription = null,
-                Modifier.constrainAs(drawableStart) {
+                Modifier.constrainAs(drawableEnd) {
                     top.linkTo(contentRef.top)
                     bottom.linkTo(contentRef.bottom)
                     end.linkTo(parent.end)
                 }
             )
-        }
-
-        Box(
-            modifier = Modifier
-                .constrainAs(contentRef) {
-                    top.linkTo(drawableTopRes?.let { drawableTop.bottom } ?: parent.top)
-                    bottom.linkTo(drawableBottomRes?.let { drawableBottom.top } ?: parent.bottom)
-                    start.linkTo(drawableStartRes?.let { drawableStart.end } ?: parent.start)
-                    end.linkTo(drawableEndRes?.let { drawableEnd.start } ?: parent.end)
-                }
-        ) {
-            content()
         }
     }
 }

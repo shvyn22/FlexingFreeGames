@@ -107,9 +107,9 @@ object Dependencies {
     }
 
     object Compose {
-        internal const val composeVersion = "1.2.0-rc02"
+        internal const val composeVersion = "1.1.1"
         private const val constraintComposeVersion = "1.1.0-alpha01"
-        private const val accompanistVersion = "0.24.12-rc"
+        private const val accompanistVersion = "0.23.1"
 
         const val composeRuntime = "androidx.compose.runtime:runtime:$composeVersion"
         const val composeUI = "androidx.compose.ui:ui:$composeVersion"

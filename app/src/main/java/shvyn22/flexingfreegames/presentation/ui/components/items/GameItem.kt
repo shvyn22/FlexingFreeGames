@@ -1,4 +1,4 @@
-package shvyn22.flexingfreegames.presentation.ui.components
+package shvyn22.flexingfreegames.presentation.ui.components.items
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -19,16 +19,19 @@ import androidx.constraintlayout.compose.Dimension
 import coil.compose.rememberImagePainter
 import shvyn22.flexingfreegames.R
 import shvyn22.flexingfreegames.data.local.model.GameModel
+import shvyn22.flexingfreegames.presentation.ui.components.DrawableWrapper
 import shvyn22.flexingfreegames.presentation.ui.theme.dimens
 
 @Composable
 fun GameItem(
     game: GameModel,
+    onGameClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier
-            .fillMaxWidth()
+            .padding(MaterialTheme.dimens.padding.paddingSmall)
+            .clickable { onGameClick(game.id) }
     ) {
         ConstraintLayout(
             modifier = Modifier
@@ -146,7 +149,7 @@ fun GameItem(
                         .constrainAs(textDescription) {
                             top.linkTo(textShowDescription.bottom)
                             start.linkTo(parent.start)
-                            end.linkTo(textReleaseDate.start)
+                            end.linkTo(parent.end)
                             width = Dimension.fillToConstraints
                         }
                 )
