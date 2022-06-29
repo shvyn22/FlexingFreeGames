@@ -3,7 +3,10 @@ package shvyn22.flexingfreegames.presentation.ui.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.MaterialTheme
@@ -35,7 +38,6 @@ fun DropdownList(
                     color = MaterialTheme.colors.surface,
                     shape = MaterialTheme.shapes.small
                 )
-                .fillMaxWidth()
                 .clickable {
                     isExpanded.value = true
                 }

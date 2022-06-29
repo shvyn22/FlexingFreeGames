@@ -35,6 +35,7 @@ fun BrowseScreen(
     val category = remember { mutableStateOf(0) }
 
     LaunchedEffect(Unit) {
+        viewModel.handleIntent(BrowseIntent.LoadPreferencesIntent)
         viewModel.browseEvent.collect { event ->
             when (event) {
                 is BrowseEvent.ShowErrorEvent -> onShowError(event.error)

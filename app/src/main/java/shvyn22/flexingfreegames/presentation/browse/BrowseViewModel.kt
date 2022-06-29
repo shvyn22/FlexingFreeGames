@@ -27,7 +27,6 @@ class BrowseViewModel @Inject constructor(
     val browseEvent get() = _browseEvent.asSharedFlow()
 
     init {
-        handleIntent(BrowseIntent.LoadPreferencesIntent)
         handleIntent(BrowseIntent.LoadGamesIntent(0, 0, 0))
     }
 

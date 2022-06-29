@@ -13,11 +13,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import shvyn22.flexingfreegames.R
 import shvyn22.flexingfreegames.presentation.ui.components.DrawableWrapper
 import shvyn22.flexingfreegames.presentation.ui.components.DropdownList
-import shvyn22.flexingfreegames.presentation.ui.theme.AppTheme
 import shvyn22.flexingfreegames.presentation.ui.theme.dimens
 import shvyn22.flexingfreegames.util.Orientation
 import shvyn22.flexingfreegames.util.rememberOrientation
@@ -34,7 +32,6 @@ fun FilterPanel(
     modifier: Modifier = Modifier
 ) {
     val orientation = rememberOrientation()
-
     val isExpanded = remember { mutableStateOf(false) }
 
     val platforms = stringArrayResource(id = R.array.platforms).toList()
@@ -57,6 +54,8 @@ fun FilterPanel(
                                 selectedIndex = platformIndex,
                                 onSelectedIndexChange = onPlatformChange,
                                 items = platforms,
+                                modifier = Modifier
+                                    .fillMaxWidth()
                             )
 
                             DropdownList(
@@ -64,6 +63,7 @@ fun FilterPanel(
                                 onSelectedIndexChange = onSortChange,
                                 items = sortTypes,
                                 modifier = Modifier
+                                    .fillMaxWidth()
                                     .padding(top = MaterialTheme.dimens.padding.paddingSmall)
                             )
 
@@ -72,33 +72,60 @@ fun FilterPanel(
                                 onSelectedIndexChange = onCategoryChange,
                                 items = categories,
                                 modifier = Modifier
+                                    .fillMaxWidth()
                                     .padding(top = MaterialTheme.dimens.padding.paddingSmall)
                             )
                         }
                     }
                     Orientation.LANDSCAPE -> {
-                        Row {
-                            DropdownList(
-                                selectedIndex = platformIndex,
-                                onSelectedIndexChange = onPlatformChange,
-                                items = platforms,
-                            )
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceAround,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Box(
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                DropdownList(
+                                    selectedIndex = platformIndex,
+                                    onSelectedIndexChange = onPlatformChange,
+                                    items = platforms,
+                                    modifier = Modifier
+                                        .padding(
+                                            horizontal = MaterialTheme.dimens.padding.paddingSmall
+                                        )
+                                        .fillMaxWidth()
+                                )
+                            }
 
-                            DropdownList(
-                                selectedIndex = sortIndex,
-                                onSelectedIndexChange = onSortChange,
-                                items = sortTypes,
-                                modifier = Modifier
-                                    .padding(start = MaterialTheme.dimens.padding.paddingSmall)
-                            )
+                            Box(
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                DropdownList(
+                                    selectedIndex = sortIndex,
+                                    onSelectedIndexChange = onSortChange,
+                                    items = sortTypes,
+                                    modifier = Modifier
+                                        .padding(
+                                            horizontal = MaterialTheme.dimens.padding.paddingSmall
+                                        )
+                                        .fillMaxWidth()
+                                )
+                            }
 
-                            DropdownList(
-                                selectedIndex = categoryIndex,
-                                onSelectedIndexChange = onCategoryChange,
-                                items = categories,
-                                modifier = Modifier
-                                    .padding(start = MaterialTheme.dimens.padding.paddingSmall)
-                            )
+                            Box(
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                DropdownList(
+                                    selectedIndex = categoryIndex,
+                                    onSelectedIndexChange = onCategoryChange,
+                                    items = categories,
+                                    modifier = Modifier
+                                        .padding(
+                                            horizontal = MaterialTheme.dimens.padding.paddingSmall
+                                        )
+                                        .fillMaxWidth()
+                                )
+                            }
                         }
                     }
                 }
