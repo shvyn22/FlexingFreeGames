@@ -353,7 +353,7 @@ fun DetailsErrorContent(
 ) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = modifier,
+        modifier = modifier.fillMaxSize(),
     ) {
         Button(
             onClick = onRetryAction
@@ -369,7 +369,7 @@ fun DetailsLoadingContent(
 ) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = modifier
+        modifier = modifier.fillMaxSize()
     ) {
         CircularProgressIndicator()
     }

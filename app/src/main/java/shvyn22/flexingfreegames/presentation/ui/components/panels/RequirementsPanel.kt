@@ -19,6 +19,7 @@ fun RequirementsPanel(
     modifier: Modifier = Modifier
 ) {
     Card(
+        elevation = MaterialTheme.dimens.shape.elevation,
         modifier = modifier
             .fillMaxWidth()
     ) {

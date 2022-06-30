@@ -39,7 +39,8 @@ fun FilterPanel(
     val categories = stringArrayResource(id = R.array.categories).toList()
 
     Card(
-        modifier = modifier
+        elevation = MaterialTheme.dimens.shape.elevation,
+        modifier = modifier,
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

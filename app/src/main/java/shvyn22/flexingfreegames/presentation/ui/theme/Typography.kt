@@ -9,16 +9,16 @@ val AppTypography = Typography(
     body1 = TextStyle(
         fontSize = Font.fontSizeBody1,
         fontWeight = FontWeight.Bold,
-        letterSpacing = Font.letterSpacingBody
+        letterSpacing = Font.letterSpacingBody,
     ),
     body2 = TextStyle(
         fontSize = Font.fontSizeBody2,
         fontWeight = FontWeight.Bold,
-        letterSpacing = Font.letterSpacingBody
+        letterSpacing = Font.letterSpacingBody,
     ),
     caption = TextStyle(
         color = Color.White,
+        fontSize = Font.fontSizeCaption,
         fontWeight = FontWeight.Bold,
-        fontSize = Font.fontSizeCaption
     )
 )

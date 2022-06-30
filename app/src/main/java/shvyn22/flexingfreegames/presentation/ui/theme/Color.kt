@@ -16,4 +16,3 @@ val AppColors = darkColors(
     onSurface = gray70,
     background = darkGray80,
 )
-

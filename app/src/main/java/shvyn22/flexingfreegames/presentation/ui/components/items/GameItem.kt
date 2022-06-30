@@ -29,6 +29,7 @@ fun GameItem(
     modifier: Modifier = Modifier,
 ) {
     Card(
+        elevation = MaterialTheme.dimens.shape.elevation,
         modifier = modifier
             .padding(MaterialTheme.dimens.padding.paddingSmall)
             .clickable { onGameClick(game.id) }
