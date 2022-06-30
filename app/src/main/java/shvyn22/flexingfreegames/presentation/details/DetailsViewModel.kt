@@ -78,7 +78,7 @@ class DetailsViewModel @Inject constructor(
     private fun toggleBookmarkIcon() {
         _detailsState.value.let { state ->
             if (state is DetailsState.DataState)
-                state.copy(isFavorite = !state.isFavorite).also {
+                state.copy(isBookmarked = !state.isBookmarked).also {
                     _detailsState.value = it
                 }
         }
