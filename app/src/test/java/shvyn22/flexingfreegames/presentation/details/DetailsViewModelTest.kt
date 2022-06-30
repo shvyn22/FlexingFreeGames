@@ -63,7 +63,7 @@ class DetailsViewModelTest {
             `is`(instanceOf(DetailsState.DataState::class.java))
         )
         assertThat(
-            (viewModel.detailsState.value as DetailsState.DataState).isFavorite,
+            (viewModel.detailsState.value as DetailsState.DataState).isBookmarked,
             `is`(false)
         )
 
@@ -74,7 +74,7 @@ class DetailsViewModelTest {
             `is`(instanceOf(DetailsState.DataState::class.java))
         )
         assertThat(
-            (viewModel.detailsState.value as DetailsState.DataState).isFavorite,
+            (viewModel.detailsState.value as DetailsState.DataState).isBookmarked,
             `is`(true)
         )
 
@@ -85,7 +85,7 @@ class DetailsViewModelTest {
             `is`(instanceOf(DetailsState.DataState::class.java))
         )
         assertThat(
-            (viewModel.detailsState.value as DetailsState.DataState).isFavorite,
+            (viewModel.detailsState.value as DetailsState.DataState).isBookmarked,
             `is`(false)
         )
     }

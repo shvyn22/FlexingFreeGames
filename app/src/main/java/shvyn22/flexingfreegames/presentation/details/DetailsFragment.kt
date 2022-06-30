@@ -112,13 +112,13 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
 
                 ivBookmark.apply {
                     setImageResource(
-                        if (state.isFavorite) R.drawable.ic_bookmarked
+                        if (state.isBookmarked) R.drawable.ic_bookmarked
                         else R.drawable.ic_not_bookmarked
                     )
 
                     setOnClickListener {
                         viewModel.handleIntent(
-                            if (state.isFavorite) DetailsIntent.DeleteBookmarkIntent(game.id)
+                            if (state.isBookmarked) DetailsIntent.DeleteBookmarkIntent(game.id)
                             else DetailsIntent.InsertBookmarkIntent(game)
                         )
                     }

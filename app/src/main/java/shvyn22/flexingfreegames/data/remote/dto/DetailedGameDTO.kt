@@ -3,6 +3,7 @@ package shvyn22.flexingfreegames.data.remote.dto
 import com.squareup.moshi.Json
 
 data class DetailedGameDTO(
+
     @field:Json(name = "id")
     val id: Int,
 
