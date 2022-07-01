@@ -23,10 +23,32 @@ object Dependencies {
             "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
     }
 
+    object Tests {
+        private const val junitVersion = "4.13.2"
+        private const val junitExtVersion = "1.1.3"
+        private const val testCoreVersion = "1.4.0"
+        private const val hamcrestVersion = "1.3"
+        private const val archTestingVersion = "2.1.0"
+        private const val mockitoVersion = "3.11.1"
+        private const val espressoVersion = "3.4.0"
+
+        const val junit = "junit:junit:$junitVersion"
+        const val junitExt = "androidx.test.ext:junit:$junitExtVersion"
+        const val testCore = "androidx.test:core-ktx:$testCoreVersion"
+        const val hamcrest = "org.hamcrest:hamcrest-all:$hamcrestVersion"
+        const val archTesting = "androidx.arch.core:core-testing:$archTestingVersion"
+
+        const val mockitoAndroid = "org.mockito:mockito-android:$mockitoVersion"
+
+        const val espressoCore = "androidx.test.espresso:espresso-core:$espressoVersion"
+        const val espressoContrib = "androidx.test.espresso:espresso-contrib:$espressoVersion"
+    }
+
     object Fragment {
         private const val fragmentVersion = "1.4.1"
 
         const val fragment = "androidx.fragment:fragment-ktx:$fragmentVersion"
+        const val fragmentTesting = "androidx.fragment:fragment-testing:$fragmentVersion"
     }
 
     object Lifecycle {
@@ -44,6 +66,7 @@ object Dependencies {
         const val navigationFragment =
             "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
         const val navigationUi = "androidx.navigation:navigation-ui-ktx:$navigationVersion"
+        const val navigationTesting = "androidx.navigation:navigation-testing:$navigationVersion"
     }
 
     object Room {

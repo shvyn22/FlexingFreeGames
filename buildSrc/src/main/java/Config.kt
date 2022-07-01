@@ -5,6 +5,8 @@ object Config {
 
     const val applicationId = "shvyn22.flexingfreegames"
 
+    const val testInstrumentationRunner = "shvyn22.flexingfreegames.DaggerTestRunner"
+
     const val versionCode = 1
     const val versionName = "1.0"
 }
