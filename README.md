@@ -1,5 +1,5 @@
 # FlexingFreeGames
-FlexingFreeGames is an Android sample application created for learning purposes only.
+FlexingFreeGames is an Android sample application created for learning purposes only.\
 This application is based on [FreeToGame.com API](https://www.freetogame.com/api-doc) and provides an ability to search free-to-play games with a lot of additional information.
 
 ## Screenshots
@@ -42,15 +42,15 @@ This application is based on [FreeToGame.com API](https://www.freetogame.com/api
   * **[Navigation components](https://developer.android.com/jetpack/androidx/releases/navigation)**.
 * **[Jetpack Compose](https://developer.android.com/jetpack/compose)** as modern declarative UI toolkit (**/compose** branch).
 * Modern XML UI toolkit.
-  * **[Material components](https://material.io/develop/android)**
-  * **ViewBinding** for binding .xml views to objects in Activities and Fragments
+  * **[Material components](https://material.io/develop/android)**.
+  * **ViewBinding** for binding .xml views to objects in Activities and Fragments.
 * API-based remote data layer.
   * **[Retrofit](https://square.github.io/retrofit/)** for network queries.
   * **[Moshi](https://github.com/square/moshi)** for parsing JSON.
 * **[DataStore](https://developer.android.com/jetpack/androidx/releases/datastore)** for working with user preferences (e.g. search filter preferences)
 * **[Room](https://developer.android.com/jetpack/androidx/releases/room)** for local data layer.
 * **[Lifecycle components](https://developer.android.com/jetpack/androidx/releases/lifecycle)**.
-  * **ViewModel** for implementing MVVM pattern.
+  * **ViewModel** for implementing MVI pattern.
 * **[Glide](https://github.com/bumptech/glide)** and **[Coil](https://coil-kt.github.io/coil/)** for working with images.
 * Testing.
   * **JUnit**.
@@ -59,6 +59,16 @@ This application is based on [FreeToGame.com API](https://www.freetogame.com/api
   * Specific testing artifacts for other libraries.
   * **Compose testing libraries**.
 * **[Hilt](https://dagger.dev/hilt/)** for dependency injection. (**[Dagger 2](https://dagger.dev/)** as its alternative (**/Dagger2+RxJava** branch)).
+
+## Key features
+#### i.e. what is unique among other samples?
+* **MVI** UI-layer architecture (utilizing **State**, **Intent**, **Event** classes).
+* **Filter-based** search request for API.
+  - **DataStore<Preferences>** implementation for saving and restoring the filters.
+* **Moshi** usage.
+* Dynamic layout based on user actions (animated sliding of some panels out and in).
+* Dynamic layout based on orientation (portrait/landscape).
+* **ViewPager** implementation for creating **carousel view** for images (game screenshots).
 
 ## License
 ```
